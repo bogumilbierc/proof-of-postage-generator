@@ -6,6 +6,10 @@ export class RecipientExtractor {
     static readonly CITY_DATE_END_REGEX = /(\d{4} roku)|(\d{4} r.)/;
 
     extractRecipient(documentText: string): string[] {
+        if(!documentText){
+            console.error('Document text is empty');
+            return [];
+        }
         console.debug('1. Get fragment of text, that possibly holds recipient');
         const possibleRecipientFragment = documentText?.substring(0, documentText.length > RecipientExtractor.HEADER_LENGTH_LIMIT ? RecipientExtractor.HEADER_LENGTH_LIMIT : documentText.length);
         console.debug('2. Extract top 10 lines from that fragment');
