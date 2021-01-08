@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { ipcMain } from 'electron';
 import { DocumentProcessor } from './services/document-processor';
+import { RecipientExtractor } from './services/recipient-extractor';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -53,5 +54,5 @@ app.on('activate', () => {
 
 // register events
 ipcMain.on('processSingleFileButtonClick', async () => {
-  await new DocumentProcessor().openAndProcessDocument();
+  await new DocumentProcessor(new RecipientExtractor()).openAndProcessDocument();
 });
