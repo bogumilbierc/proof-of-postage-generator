@@ -5,6 +5,9 @@ const mammoth = require('mammoth');
 export class DocumentProcessor {
 
     static readonly HEADER_LENGTH_LIMIT = 500;
+    static readonly POSTCODE_CITY_REGEX = /^\d{2}-\d{3} \D{3,}$/;
+    static readonly CITY_DATE_START_REGEX = /^\D{3,}, dnia/;
+    static readonly CITY_DATE_END_REGEX = /(\d{4} roku)|(\d{4} r.)/;
 
     async openAndProcessDocument(): Promise<void> {
         const fileNames = dialog.showOpenDialogSync({ properties: ['openFile'] });
@@ -19,6 +22,9 @@ export class DocumentProcessor {
 
         const documentText = await this.loadTopPartOfDocumentText(path);
         const top10Lines = this.extractTop10Lines(documentText);
+        const addressLines = this.extractAddressLines(top10Lines);
+        console.log('Adress lines');
+        console.log(addressLines);
 
     }
 
@@ -35,10 +41,32 @@ export class DocumentProcessor {
         if (nonEmptyLines?.length > 10) {
             nonEmptyLines.length = 10;
         }
-        nonEmptyLines?.forEach((fragment: string) => {
-            console.debug(`Fragment: ${fragment}`);
-        });
         return nonEmptyLines;
+    }
+
+    private extractAddressLines(possibleAddressLines: string[]): string[] {
+        const extractedAddressLines: string[] = [];
+
+        for (let i = 0; i < possibleAddressLines.length; i++) {
+            const currentLine = possibleAddressLines[i];
+
+            if (this.isLineAddressLine(currentLine)) {
+                extractedAddressLines.push(currentLine);
+            }
+            if (this.isPostcodeLine(currentLine)) {
+                break;
+            }
+        }
+
+        return extractedAddressLines;
+    }
+
+    private isLineAddressLine(text: string): boolean {
+        return !DocumentProcessor.CITY_DATE_START_REGEX.test(text) && !DocumentProcessor.CITY_DATE_END_REGEX.test(text);
+    }
+
+    private isPostcodeLine(text: string): boolean {
+        return DocumentProcessor.POSTCODE_CITY_REGEX.test(text);
     }
 
     extractRecipent(): Recipent {
