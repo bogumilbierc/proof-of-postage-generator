@@ -52,6 +52,6 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 
 // register events
-ipcMain.on('processSingleFileButtonClick', () => {
-  new DocumentProcessor().openAndProcessDocument();
+ipcMain.on('processSingleFileButtonClick', async () => {
+  await new DocumentProcessor().openAndProcessDocument();
 });
