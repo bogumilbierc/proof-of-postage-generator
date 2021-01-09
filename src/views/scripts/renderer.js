@@ -5,6 +5,14 @@ function onProcessSingleFileClick() {
     ipcRenderer.send("processSingleFileButtonClick");
 }
 
+function onSendersClick() {
+    ipcRenderer.send("processSendersClick");
+}
+
+function onStartPageClick() {
+    ipcRenderer.send("processStartPageClick");
+}
+
 
 document.addEventListener('drop', (event) => {
     event.preventDefault();

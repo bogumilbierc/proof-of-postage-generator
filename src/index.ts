@@ -8,9 +8,11 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit();
 }
 
+let mainWindow: BrowserWindow;
+
 const createWindow = (): void => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: 600,
     width: 900,
     webPreferences: {
@@ -60,3 +62,11 @@ ipcMain.on('processListOfFiles', async (event, arg) => {
   console.log(arg);
   return Promise.resolve('test');
 });
+
+ipcMain.on('processSendersClick', () => {
+  mainWindow.loadFile(path.join(__dirname, '../src/views/senders.html'));
+});
+
+ipcMain.on('processStartPageClick', () => {
+  mainWindow.loadFile(path.join(__dirname, '../src/views/index.html'));
+})
