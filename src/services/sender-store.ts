@@ -39,5 +39,5 @@ export class SenderStore {
 
 export interface Sender {
     name: string;
-    address: string;
+    address: string[];
 }

@@ -7,8 +7,11 @@
   <title>Potwierdzenie nadania!</title>
   <link rel="stylesheet" href="styles/index.css">
   <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <script src="scripts/jquery-3.5.1.min.js"></script>
+  <script>window.$ = window.jQuery = require('./scripts/jquery-3.5.1.min.js');</script>
   <script src="scripts/bootstrap.bundle.min.js"></script>
   <script src="scripts/renderer.js"></script>
+  <script src="scripts/senders-renderer.js"></script>
 </head>
 
 <body class="container-fluid">
@@ -37,13 +40,15 @@
     <table class="table">
       <thead>
         <tr>
-          <td>Dane</td>
+          <td>Nazwa</td>
+          <td>Adres</td>
           <td>Akcje</td>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="sender-table-body">
         <tr>
           <td>Grzegorz Jarzyna</td>
+          <td></td>
           <td>
             <button class="btn btn-info">Ustaw jako domyślny</button>
             <button class="btn btn-danger">Usuń</button>
