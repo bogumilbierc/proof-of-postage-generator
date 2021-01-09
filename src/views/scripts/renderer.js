@@ -7,7 +7,9 @@ function onProcessSingleFileClick() {
 
 function navigateToPage(page) {
     $('div[id$="-page"').hide();
+    $('a[id$="-nav-link"').removeClass('active');
     $(`#${page}-page`).show();
+    $(`#${page}-nav-link`).addClass('active');
 }
 
 document.addEventListener('drop', (event) => {
