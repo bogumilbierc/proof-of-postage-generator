@@ -5,14 +5,10 @@ function onProcessSingleFileClick() {
     ipcRenderer.send("processSingleFileButtonClick");
 }
 
-function onSendersClick() {
-    ipcRenderer.send("processSendersClick");
+function navigateToPage(page) {
+    $('div[id$="-page"').hide();
+    $(`#${page}-page`).show();
 }
-
-function onStartPageClick() {
-    ipcRenderer.send("processStartPageClick");
-}
-
 
 document.addEventListener('drop', (event) => {
     event.preventDefault();
@@ -30,3 +26,7 @@ document.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.stopPropagation();
 });
+
+$(document).ready(() => {
+    navigateToPage('generator');
+})

@@ -7,32 +7,35 @@
   <title>Potwierdzenie nadania!</title>
   <link rel="stylesheet" href="styles/index.css">
   <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <script src="scripts/jquery-3.5.1.min.js"></script>
+  <script>window.$ = window.jQuery = require('./scripts/jquery-3.5.1.min.js');</script>
   <script src="scripts/bootstrap.bundle.min.js"></script>
   <script src="scripts/renderer.js"></script>
+  <script src="scripts/senders-renderer.js"></script>
 </head>
 
 <body class="container-fluid">
 
   <nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Start</a>
+      <a class="navbar-brand" href="#" onclick="navigateToPage('generator')">Generator</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#" onclick="onSendersClick()">Nadawcy</a>
+            <a class="nav-link" aria-current="page" href="#" onclick="navigateToPage('senders')">Nadawcy</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Preferencje</a>
+            <a class="nav-link" aria-current="page" href="#" onclick="navigateToPage('preferences')">Preferencje</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <div class="container-fluid">
+  <div id="generator-page" class="container-fluid">
     <p>Wybór nadawcy</p>
     <table class="table">
       <thead>
@@ -52,8 +55,31 @@
 
     </table>
 
-    <p>Pzeciągnij jeden lub wiele plików albo załaduj klikając guzik</p>
-    <button class="btn btn-primary" onclick="onProcessSingleFileClick()">Wczytaj plik</button>
+    <div class="border border-primary border-3 text-center p-3">
+      <p>Pzeciągnij jeden lub wiele plików (dowolne miejsce na ekranie) albo wybierz klikając guzik</p>
+      <button class="btn btn-primary mt-5" onclick="onProcessSingleFileClick()">Wczytaj plik</button>
+    </div>
+
+  </div>
+
+  <div id="senders-page" class="container-fluid">
+    <p>Zarządzanie nadawcami</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <td>Nazwa</td>
+          <td>Adres</td>
+          <td>Akcje</td>
+        </tr>
+      </thead>
+      <tbody id="sender-table-body">
+      </tbody>
+
+    </table>
+  </div>
+
+  <div id="preferences-page" class="container-fluid">
+    <p>Preferencje użytkownika</p>
   </div>
 
 

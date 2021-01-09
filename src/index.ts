@@ -62,11 +62,3 @@ ipcMain.on('processListOfFiles', async (event, arg) => {
   console.log(arg);
   return Promise.resolve('test');
 });
-
-ipcMain.on('processSendersClick', () => {
-  mainWindow.loadFile(path.join(__dirname, '../src/views/senders.html'));
-});
-
-ipcMain.on('processStartPageClick', () => {
-  mainWindow.loadFile(path.join(__dirname, '../src/views/index.html'));
-})
