@@ -16,8 +16,10 @@ document.addEventListener('drop', (event) => {
 
     if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
         const paths = Object.values(event.dataTransfer.files).map((file) => file.path);
-        console.log('Got list of file paths');
-        console.log(paths);
+        $("#generator-file-list").empty();
+        paths.forEach((path) => {
+            $("#generator-file-list").append(`<li>${path}</li>`);
+        });
         ipcRenderer.send('processListOfFiles', paths);
     }
 });
