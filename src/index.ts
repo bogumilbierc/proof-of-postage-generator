@@ -1,6 +1,5 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
-import { ipcMain } from 'electron';
 import { DocumentProcessor } from './services/document-processor';
 import { RecipientExtractor } from './services/recipient-extractor';
 
@@ -13,7 +12,7 @@ const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
-    width: 800,
+    width: 900,
     webPreferences: {
       nodeIntegration: true,
       plugins: true
@@ -24,7 +23,7 @@ const createWindow = (): void => {
   mainWindow.loadFile(path.join(__dirname, '../src/views/index.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -55,4 +54,9 @@ app.on('activate', () => {
 // register events
 ipcMain.on('processSingleFileButtonClick', async () => {
   await new DocumentProcessor(new RecipientExtractor()).openAndProcessDocument();
+});
+
+ipcMain.on('processListOfFiles', async (event, arg) => {
+  console.log(arg);
+  return Promise.resolve('test');
 });

@@ -6,7 +6,7 @@ export class RecipientExtractor {
     static readonly CITY_DATE_END_REGEX = /(\d{4} roku)|(\d{4} r.)/;
 
     extractRecipient(documentText: string): string[] {
-        if(!documentText){
+        if (!documentText) {
             console.error('Document text is empty');
             return [];
         }
