@@ -68,7 +68,19 @@
   </div>
 
   <div id="senders-page" class="container-fluid">
-    <p>Zarządzanie nadawcami</p>
+    <h2>Dodaj nadawcę</h2>
+    <div class="mb-3">
+      <label for="add-sender-name" class="form-label">Nazwa</label>
+      <input type="email" class="form-control" id="add-sender-name">
+    </div>
+    <div class="mb-3">
+      <label for="add-sender-address" class="form-label">Adres</label>
+      <textarea class="form-control" id="add-sender-address" rows="6"></textarea>
+    </div>
+    <button class="btn btn-success" onclick="onSaveSenderClick()">Zapisz</button>
+    <span class="mt-2"></span>
+
+    <h2>Obecni nadawcy</h2>
     <table class="table">
       <thead>
         <tr>

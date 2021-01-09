@@ -1,5 +1,17 @@
-function onAddSenderClick() {
-
+function onSaveSenderClick() {
+    const sender = {
+        name: $("#add-sender-name").val(),
+        address: $("#add-sender-address").val().split('\n')
+    };
+    if (!sender.name) {
+        alert('Nazwa jest wymagana');
+        return;
+    }
+    if (!sender.address.length || !sender.address[0]) {
+        alert('Adres jest wymagany');
+        return;
+    }
+    console.log(sender);
 }
 
 function onDeleteSenderClick(senderName) {
@@ -61,6 +73,7 @@ function buildAddressColumnText(sender) {
             html += '<br/>'
         }
     }
+    return html;
 }
 
 $(document).ready(() => {
