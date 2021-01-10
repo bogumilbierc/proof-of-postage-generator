@@ -1,3 +1,6 @@
+import * as log from 'electron-log';
+
+
 export class RecipientExtractor {
 
     static readonly HEADER_LENGTH_LIMIT = 500;
@@ -7,17 +10,17 @@ export class RecipientExtractor {
 
     extractRecipient(documentText: string): string[] {
         if (!documentText) {
-            console.error('Document text is empty');
+            log.error('Document text is empty');
             return [];
         }
-        console.debug('1. Get fragment of text, that possibly holds recipient');
+        log.debug('1. Get fragment of text, that possibly holds recipient');
         const possibleRecipientFragment = documentText?.substring(0, documentText.length > RecipientExtractor.HEADER_LENGTH_LIMIT ? RecipientExtractor.HEADER_LENGTH_LIMIT : documentText.length);
-        console.debug('2. Extract top 10 lines from that fragment');
+        log.debug('2. Extract top 10 lines from that fragment');
         const top10Lines = this.extractTop10Lines(possibleRecipientFragment);
-        console.debug('3. Extract address lines from those 10 lines');
+        log.debug('3. Extract address lines from those 10 lines');
         const addressLines = this.extractAddressLines(top10Lines);
-        console.log('Adress lines');
-        console.log(addressLines);
+        log.debug('Adress lines');
+        log.debug(addressLines);
         return addressLines;
     }
 

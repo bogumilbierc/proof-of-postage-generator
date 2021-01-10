@@ -1,4 +1,5 @@
 import { App, dialog } from "electron";
+import * as log from 'electron-log';
 import * as path from 'path';
 import fs = require('fs');
 
@@ -10,7 +11,7 @@ export class PreferencesService {
 
     getUserPreferences(): UserPreferences {
         if (!fs.existsSync(this.getPreferencesFileLocation())) {
-            console.debug('Preferences file does not exist, returning default preferences.');
+            log.debug('Preferences file does not exist, returning default preferences.');
             return this.getDefaultPreferences();
         }
 
@@ -37,7 +38,7 @@ export class PreferencesService {
     }
 
     storeUserPreferences(preferences: UserPreferences): void {
-        console.log('Storing user preferences');
+        log.info('Storing user preferences');
         fs.writeFileSync(this.getPreferencesFileLocation(), JSON.stringify(preferences));
     }
 

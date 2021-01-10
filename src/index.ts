@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import * as log from 'electron-log';
 import * as path from 'path';
 import { DocumentProcessor } from './services/document-processor';
 import { PreferencesService } from './services/preferences-service';
@@ -58,8 +59,8 @@ app.on('activate', () => {
 
 // register events
 ipcMain.on('processDocuments', async (event, arg) => {
-  console.log(arg);
-  event.reply('processDocumentsResponse', await new DocumentProcessor(new RecipientExtractor()).openAndProcessDocument(arg))
+  log.debug(`Got request to process: ${JSON.stringify(arg)}`);
+  event.reply('processDocumentsResponse', await new DocumentProcessor(new RecipientExtractor()).processRequest(arg))
 });
 
 /**

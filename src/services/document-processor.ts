@@ -1,19 +1,17 @@
 import { dialog } from 'electron';
+import * as log from 'electron-log';
 import { ProcessDocumentsRequest } from '../models/process-documents-request.model';
-import { ProcessedDocument } from '../models/process-documents-response.model';
+import { ProcessedDocument } from '../models/processed-document.model';
 import { RecipientExtractor } from './recipient-extractor';
 const mammoth = require('mammoth');
 
 export class DocumentProcessor {
 
-    static readonly HEADER_LENGTH_LIMIT = 500;
-    static readonly POSTCODE_CITY_REGEX = /^\d{2}-\d{3} \D{3,}$/;
-    static readonly CITY_DATE_START_REGEX = /^\D{3,}, dnia/;
-    static readonly CITY_DATE_END_REGEX = /(\d{4} roku)|(\d{4} r.)/;
+    static readonly SUPPORTED_EXTENSIONS = ['doc', 'docx', 'odt'];
 
     constructor(private readonly recipientExtractor: RecipientExtractor) { }
 
-    async openAndProcessDocument(request: ProcessDocumentsRequest): Promise<ProcessedDocument[]> {
+    async processRequest(request: ProcessDocumentsRequest): Promise<ProcessedDocument[]> {
         const fileNames = request.paths || this.promptForPaths();
         if (fileNames?.length) {
             const promises = fileNames.map((path: string) => this.processSingleDocument(path));
@@ -28,14 +26,23 @@ export class DocumentProcessor {
             filters: [
                 {
                     name: 'Pisma',
-                    extensions: ['doc', 'docx', 'odt']
+                    extensions: DocumentProcessor.SUPPORTED_EXTENSIONS
                 }
             ]
         });
     }
 
     private async processSingleDocument(path: string): Promise<ProcessedDocument> {
-        console.log(`Will try to process document at path: ${path}`);
+        log.debug(`Will try to process document at path: ${path}`);
+
+        if (!this.isDocumentTypeSupported(path)) {
+            log.error(`Unsupported extension at path: ${path}`);
+            return Promise.resolve({
+                path,
+                success: false,
+                message: `FileType unsupported. Supported file types are: ${JSON.stringify(DocumentProcessor.SUPPORTED_EXTENSIONS)}`
+            })
+        }
         try {
             const document = await mammoth.extractRawText({ path });
             const recipient = this.recipientExtractor.extractRecipient(document?.value);
@@ -44,6 +51,8 @@ export class DocumentProcessor {
                 recipient
             }
         } catch (e) {
+            log.error(`Error while processing at path: ${path}`);
+            log.error(e);
             return {
                 path,
                 success: false,
@@ -51,6 +60,10 @@ export class DocumentProcessor {
             }
         }
 
+    }
+
+    private isDocumentTypeSupported(path: string): boolean {
+        return !!DocumentProcessor.SUPPORTED_EXTENSIONS.find((extension: string) => path.toLowerCase().endsWith(extension.toLowerCase()));
     }
 
 }
