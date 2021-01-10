@@ -1,7 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { DocumentProcessor } from './services/document-processor';
+import { PreferencesService } from './services/preferences-service';
 import { RecipientExtractor } from './services/recipient-extractor';
+import { SenderStore } from './services/sender-store';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -62,4 +64,20 @@ ipcMain.on('processSingleFileButtonClick', async () => {
 ipcMain.on('processListOfFiles', async (event, arg) => {
   console.log(arg);
   return Promise.resolve('test');
+});
+
+
+/**
+ * Senders integration
+ */
+ipcMain.on('getListOfSenders', (event, arg) => {
+  event.returnValue = new SenderStore(new PreferencesService()).getAllSenders();
+});
+
+ipcMain.on('addSender', (event, arg) => {
+  event.returnValue = new SenderStore(new PreferencesService()).addSender(arg);
+});
+
+ipcMain.on('deleteSender', (event, arg) => {
+  event.returnValue = new SenderStore(new PreferencesService()).deleteSender(arg);
 });

@@ -11,41 +11,21 @@ function onSaveSenderClick() {
         alert('Adres jest wymagany');
         return;
     }
+    console.log('Sending request to add sender:')
     console.log(sender);
+    ipcRenderer.sendSync('addSender', sender);
+    renderSenders();
 }
 
 function onDeleteSenderClick(senderName) {
-    console.log(`delete sender: ${senderName}`)
+    console.log(`Sending request to delete sender: ${senderName}`)
+    ipcRenderer.sendSync('deleteSender', senderName);
+    renderSenders();
 }
 
 function renderSenders() {
-    const senders = [
-        {
-            name: 'Darth Vader',
-            address: [
-                'Darth Vader',
-                'ul. Gwiazdy Śmierci 12',
-                '00-200 Imperium'
-            ]
-        },
-        {
-            name: 'Test 2',
-            address: [
-                'Super Test2',
-                'Dodatkowa linia',
-                'ul. Kasztanowa 13',
-                '10-200 NieWarszawa'
-            ]
-        },
-        {
-            name: 'Test3',
-            address: [
-                'Super Test3',
-                'ul. Jarzębinowa 13',
-                '10-200 NieWarszawa'
-            ]
-        }
-    ];
+
+    const senders = ipcRenderer.sendSync('getListOfSenders');
 
     $("#sender-table-body").empty()
     senders.forEach(sender => {

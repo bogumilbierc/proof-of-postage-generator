@@ -15,7 +15,11 @@ export class SenderStore {
     }
 
     deleteSender(name: string): void {
-
+        const senders = this.getAllSenders();
+        const filteredSenders = senders.filter(
+            (sender: Sender) => sender.name !== name
+        );
+        this.storeSenders(filteredSenders);
     }
 
     getAllSenders(): Sender[] {
