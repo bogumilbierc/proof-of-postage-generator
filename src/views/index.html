@@ -12,6 +12,7 @@
   <script src="scripts/bootstrap.bundle.min.js"></script>
   <script src="scripts/renderer.js"></script>
   <script src="scripts/senders-renderer.js"></script>
+  <script src="scripts/preferences-renderer.js"></script>
 </head>
 
 <body class="container-fluid">
@@ -28,7 +29,8 @@
             <a class="nav-link" id="sender-nav-link" href="#" onclick="navigateToPage('senders')">Nadawcy</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="preferences-nav-link" href="#" onclick="navigateToPage('preferences')">Preferencje</a>
+            <a class="nav-link" id="preferences-nav-link" href="#"
+              onclick="navigateToPage('preferences')">Preferencje</a>
           </li>
         </ul>
       </div>
@@ -96,7 +98,9 @@
   </div>
 
   <div id="preferences-page" class="container-fluid">
-    <p>Preferencje użytkownika</p>
+    <h2>Preferencje użytkownika</h2>
+    <p id="senders-file-location"></p>
+    <button class="btn btn-primary" onclick="onChangeSenderFilesLocationClick()">Zmień lokalizację</button>
   </div>
 
 

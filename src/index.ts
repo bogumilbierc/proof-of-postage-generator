@@ -71,13 +71,28 @@ ipcMain.on('processListOfFiles', async (event, arg) => {
  * Senders integration
  */
 ipcMain.on('getListOfSenders', (event, arg) => {
-  event.returnValue = new SenderStore(new PreferencesService()).getAllSenders();
+  event.returnValue = new SenderStore(new PreferencesService(app)).getAllSenders();
 });
 
 ipcMain.on('addSender', (event, arg) => {
-  event.returnValue = new SenderStore(new PreferencesService()).addSender(arg);
+  event.returnValue = new SenderStore(new PreferencesService(app)).addSender(arg);
 });
 
 ipcMain.on('deleteSender', (event, arg) => {
-  event.returnValue = new SenderStore(new PreferencesService()).deleteSender(arg);
+  event.returnValue = new SenderStore(new PreferencesService(app)).deleteSender(arg);
+});
+
+/**
+ * Preferences integration
+ */
+ipcMain.on('getPreferences', (event, arg) => {
+  event.returnValue = new PreferencesService(app).getUserPreferences();
+});
+
+ipcMain.on('savePreferences', (event, arg) => {
+  event.returnValue = new PreferencesService(app).storeUserPreferences(arg);
+});
+
+ipcMain.on('changeSenderFileLocation', (event, arg) => {
+  event.returnValue = new PreferencesService(app).changeSendersFileLocation();
 });
