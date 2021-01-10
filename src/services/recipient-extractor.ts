@@ -38,7 +38,7 @@ export class RecipientExtractor {
             const currentLine = possibleAddressLines[i];
 
             if (this.isLineAddressLine(currentLine)) {
-                extractedAddressLines.push(currentLine);
+                extractedAddressLines.push(currentLine.trim());
             }
             if (this.isPostcodeLine(currentLine)) {
                 break;
