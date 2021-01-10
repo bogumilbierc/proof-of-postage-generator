@@ -13,12 +13,13 @@ export class DocumentProcessor {
 
     constructor(private readonly recipientExtractor: RecipientExtractor) { }
 
-    async openAndProcessDocument(request: ProcessDocumentsRequest): Promise<ProcessedDocument> {
+    async openAndProcessDocument(request: ProcessDocumentsRequest): Promise<ProcessedDocument[]> {
         const fileNames = request.paths || this.promptForPaths();
         if (fileNames?.length) {
-            return this.processSingleDocument(fileNames[0]);
+            const promises = fileNames.map((path: string) => this.processSingleDocument(path));
+            return Promise.all(promises);
         }
-        return Promise.resolve({ path: 'test' });
+        return Promise.resolve([]);
     }
 
     private promptForPaths(): string[] {
@@ -27,7 +28,7 @@ export class DocumentProcessor {
             filters: [
                 {
                     name: 'Pisma',
-                    extensions: ['doc', 'docx', 'pdf', 'odt']
+                    extensions: ['doc', 'docx', 'odt']
                 }
             ]
         });
@@ -35,12 +36,21 @@ export class DocumentProcessor {
 
     private async processSingleDocument(path: string): Promise<ProcessedDocument> {
         console.log(`Will try to process document at path: ${path}`);
-        const document = await mammoth.extractRawText({ path });
-        const recipient = this.recipientExtractor.extractRecipient(document?.value);
-        return {
-            path,
-            recipient
+        try {
+            const document = await mammoth.extractRawText({ path });
+            const recipient = this.recipientExtractor.extractRecipient(document?.value);
+            return {
+                path,
+                recipient
+            }
+        } catch (e) {
+            return {
+                path,
+                success: false,
+                message: e?.message
+            }
         }
+
     }
 
 }
