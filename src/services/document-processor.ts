@@ -1,4 +1,6 @@
-import { dialog } from 'electron'
+import { dialog } from 'electron';
+import { ProcessDocumentsRequest } from '../models/process-documents-request.model';
+import { ProcessedDocument } from '../models/process-documents-response.model';
 import { RecipientExtractor } from './recipient-extractor';
 const mammoth = require('mammoth');
 
@@ -11,17 +13,34 @@ export class DocumentProcessor {
 
     constructor(private readonly recipientExtractor: RecipientExtractor) { }
 
-    async openAndProcessDocument(): Promise<void> {
-        const fileNames = dialog.showOpenDialogSync({ properties: ['openFile'] });
+    async openAndProcessDocument(request: ProcessDocumentsRequest): Promise<ProcessedDocument> {
+        const fileNames = request.paths || this.promptForPaths();
         if (fileNames?.length) {
-            this.processDocument(fileNames[0]);
+            return this.processSingleDocument(fileNames[0]);
         }
+        return Promise.resolve({ path: 'test' });
     }
 
-    async processDocument(path: string): Promise<string[]> {
+    private promptForPaths(): string[] {
+        return dialog.showOpenDialogSync({
+            properties: ['openFile'],
+            filters: [
+                {
+                    name: 'Pisma',
+                    extensions: ['doc', 'docx', 'pdf', 'odt']
+                }
+            ]
+        });
+    }
+
+    private async processSingleDocument(path: string): Promise<ProcessedDocument> {
         console.log(`Will try to process document at path: ${path}`);
         const document = await mammoth.extractRawText({ path });
-        return this.recipientExtractor.extractRecipient(document?.value);
+        const recipient = this.recipientExtractor.extractRecipient(document?.value);
+        return {
+            path,
+            recipient
+        }
     }
 
 }

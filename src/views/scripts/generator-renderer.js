@@ -8,8 +8,11 @@ function renderGenerator() {
 }
 
 function onProcessSingleFileClick() {
-    console.log('sending event to ipc rendered');
-    ipcRenderer.send("processSingleFileButtonClick");
+    console.log('Sending event to ipc renderer - not paths');
+    const processRequest = {
+        sender: $('#generator-sender-select').val()
+    }
+    ipcRenderer.send('processDocuments', processRequest);
 }
 
 document.addEventListener('drop', (event) => {
@@ -22,9 +25,21 @@ document.addEventListener('drop', (event) => {
         paths.forEach((path) => {
             $("#generator-file-list").append(`<li>${path}</li>`);
         });
-        ipcRenderer.send('processListOfFiles', paths);
+
+        console.log('Sending event to ipc renderer - with paths');
+        const processRequest = {
+            paths,
+            sender: $('#generator-sender-select').val()
+        }
+        ipcRenderer.send('processDocuments', processRequest);
     }
 });
+
+ipcRenderer.on('processDocumentsResponse', (event, arg) => {
+    console.log('Processing response from backend:');
+    console.log(arg);
+});
+
 
 document.addEventListener('dragover', (e) => {
     e.preventDefault();

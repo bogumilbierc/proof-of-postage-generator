@@ -57,15 +57,10 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 
 // register events
-ipcMain.on('processSingleFileButtonClick', async () => {
-  await new DocumentProcessor(new RecipientExtractor()).openAndProcessDocument();
-});
-
-ipcMain.on('processListOfFiles', async (event, arg) => {
+ipcMain.on('processDocuments', async (event, arg) => {
   console.log(arg);
-  return Promise.resolve('test');
+  event.reply('processDocumentsResponse', await new DocumentProcessor(new RecipientExtractor()).openAndProcessDocument(arg))
 });
-
 
 /**
  * Senders integration
