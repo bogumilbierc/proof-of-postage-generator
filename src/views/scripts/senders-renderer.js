@@ -1,3 +1,12 @@
+function renderSenders() {
+    const senders = ipcRenderer.sendSync('getListOfSenders');
+
+    $("#sender-table-body").empty()
+    senders.forEach(sender => {
+        $("#sender-table-body").append(buildSenderRow(sender));
+    });
+}
+
 function onSaveSenderClick() {
     const sender = {
         name: $("#add-sender-name").val(),
@@ -29,18 +38,6 @@ function onSetSenderAsDefaultClick(senderName) {
     renderSenders();
 }
 
-function renderSenders() {
-
-    const senders = ipcRenderer.sendSync('getListOfSenders');
-
-    $("#sender-table-body").empty()
-    senders.forEach(sender => {
-        $("#sender-table-body").append(buildSenderRow(sender));
-    });
-
-    renderGenerator();
-}
-
 function buildSenderRow(sender) {
     return `<tr>
     <td>${sender.name}</td>
@@ -64,7 +61,3 @@ function buildAddressColumnText(sender) {
     }
     return html;
 }
-
-$(document).ready(() => {
-    renderSenders();
-})
