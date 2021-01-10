@@ -33,4 +33,14 @@ document.addEventListener('dragover', (e) => {
 
 $(document).ready(() => {
     navigateToPage('generator');
+    renderGenerator();
 })
+
+function renderGenerator() {
+    console.log('rendering generator');
+    const senders = ipcRenderer.sendSync('getListOfSenders');
+    $('#generator-sender-select').empty();
+    senders.forEach((sender) => {
+        $('#generator-sender-select').append(`<option value="${sender.name}">${sender.name}</option>`);
+    });
+}

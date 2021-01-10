@@ -31,6 +31,8 @@ function renderSenders() {
     senders.forEach(sender => {
         $("#sender-table-body").append(buildSenderRow(sender));
     });
+
+    renderGenerator();
 }
 
 function buildSenderRow(sender) {
