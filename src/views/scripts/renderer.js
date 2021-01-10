@@ -41,6 +41,6 @@ function renderGenerator() {
     const senders = ipcRenderer.sendSync('getListOfSenders');
     $('#generator-sender-select').empty();
     senders.forEach((sender) => {
-        $('#generator-sender-select').append(`<option value="${sender.name}">${sender.name}</option>`);
+        $('#generator-sender-select').append(`<option ${sender.isDefault ? 'selected' : ''} value="${sender.name}">${sender.name}</option>`);
     });
 }

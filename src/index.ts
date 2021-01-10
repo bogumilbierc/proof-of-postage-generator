@@ -82,6 +82,10 @@ ipcMain.on('deleteSender', (event, arg) => {
   event.returnValue = new SenderStore(new PreferencesService(app)).deleteSender(arg);
 });
 
+ipcMain.on('setSenderAsDefault', (event, arg) => {
+  event.returnValue = new SenderStore(new PreferencesService(app)).setSenderAsDefault(arg);
+})
+
 /**
  * Preferences integration
  */

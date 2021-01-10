@@ -18,8 +18,14 @@ function onSaveSenderClick() {
 }
 
 function onDeleteSenderClick(senderName) {
-    console.log(`Sending request to delete sender: ${senderName}`)
+    console.log(`Sending request to delete sender: ${senderName}`);
     ipcRenderer.sendSync('deleteSender', senderName);
+    renderSenders();
+}
+
+function onSetSenderAsDefaultClick(senderName) {
+    console.log(`Sending request to set sender as default: ${senderName}`);
+    ipcRenderer.sendSync('setSenderAsDefault', senderName);
     renderSenders();
 }
 
@@ -39,8 +45,9 @@ function buildSenderRow(sender) {
     return `<tr>
     <td>${sender.name}</td>
     <td>${buildAddressColumnText(sender)}</td>
+    <td>${sender.isDefault ? 'TAK' : ''}</td>
     <td>
-            <button disabled class="btn btn-info">Ustaw jako domyślny</button>
+            <button class="btn btn-info" onclick="onSetSenderAsDefaultClick('${sender.name}')">Ustaw jako domyślny</button>
             <button class="btn btn-danger" onclick="onDeleteSenderClick('${sender.name}')">Usuń</button>
     </td>
     

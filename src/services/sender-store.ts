@@ -32,6 +32,17 @@ export class SenderStore {
         return JSON.parse(rawFile.toString());
     }
 
+    setSenderAsDefault(name: string): void {
+        const senders = this.getAllSenders();
+        const updatedSenders = senders.map((sender: Sender) => {
+            return {
+                ...sender,
+                isDefault: name === sender.name
+            }
+        });
+        this.storeSenders(updatedSenders);
+    }
+
     private storeSenders(senders: Sender[]): void {
         const sendersLocation = this.preferencesService.getUserPreferences().sendersStoreLocation;
         console.debug(`Storing list of senders in: ${sendersLocation}`);
@@ -44,4 +55,5 @@ export class SenderStore {
 export interface Sender {
     name: string;
     address: string[];
+    isDefault?: boolean;
 }
