@@ -8,3 +8,11 @@ Pierwszy wiersz może (lecz nie musi) zawierać miasto oraz datę w jednym z dw�
 - "Warszawa, dnia 01.10.2019 roku" (miesiąc jako liczba)
 
 Przykładowy zrzut ekranu z pismem:
+![GitHub Logo](/docs/sample-document.png)
+
+## Wykorzystane technologie
+- NodeJs 14.15
+- ElectronJS
+- TypeScript
+- Axios
+- `http://p.ar2oor.pl/potwierdzenia/` (generowanie potwierdzeń)
