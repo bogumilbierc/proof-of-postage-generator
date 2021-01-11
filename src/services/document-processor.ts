@@ -22,7 +22,10 @@ export class DocumentProcessor {
 
     private promptForPaths(): string[] {
         return dialog.showOpenDialogSync({
-            properties: ['openFile'],
+            properties: [
+                'openFile',
+                'multiSelections'
+            ],
             filters: [
                 {
                     name: 'Pisma',
