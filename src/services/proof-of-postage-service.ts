@@ -27,7 +27,9 @@ export class ProofOfPostageService {
 
         for (let document of processedDocuments) {
             if (document.success) {
-                document.pdfGenerated = await this.pdfGenerator.safelyGenerateFile(sender, document.recipient, this.getConfirmationFilePath(document));
+                const confirmationPath = this.getConfirmationFilePath(document)
+                document.confirmationLocation = confirmationPath;
+                document.pdfGenerated = await this.pdfGenerator.safelyGenerateFile(sender, document.recipient, confirmationPath);
             } else {
                 document.pdfGenerated = false;
             }

@@ -57,6 +57,22 @@
       <button class="btn btn-primary mt-5" onclick="onProcessSingleFileClick()">Wczytaj plik</button>
     </div>
 
+    <div class="mt-3" id="generator-summary-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Plik</th>
+            <th>Sukces</th>
+            <th>Odbiorca</th>
+            <th>Potwierdzenie</th>
+          </tr>
+        </thead>
+        <tbody id="generator-summary">
+
+        </tbody>
+      </table>
+    </div>
+
   </div>
 
   <div id="senders-page" class="container-fluid">
@@ -92,8 +108,10 @@
     <h2>Preferencje użytkownika</h2>
     <p id="senders-file-location"></p>
     <p id="confirmations-location"></p>
-    <button class="btn btn-primary" onclick="onChangeSenderFilesLocationClick()">Zmień lokalizację pliku z nadawcami</button>
-    <button class="btn btn-primary" onclick="onChangeConfirmationsLocationClick()">Zmień lokalizację folderu z potwierdzeniami</button>
+    <button class="btn btn-primary" onclick="onChangeSenderFilesLocationClick()">Zmień lokalizację pliku z
+      nadawcami</button>
+    <button class="btn btn-primary" onclick="onChangeConfirmationsLocationClick()">Zmień lokalizację folderu z
+      potwierdzeniami</button>
 
   </div>
 

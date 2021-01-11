@@ -28,7 +28,7 @@ export class PdfGenerator {
             data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             responseType: 'arraybuffer',
-            timeout: 5000
+            timeout: 10000
         });
 
         log.info(`PdfGenerator: File generation response status: ${response.status}`);

@@ -12,7 +12,24 @@ function onProcessSingleFileClick() {
     const processRequest = {
         sender: $('#generator-sender-select').val()
     }
+    $('#generator-summary-wrapper').hide();
     ipcRenderer.send('processDocuments', processRequest);
+}
+
+function renderProcessingSummary(processedDocuments) {
+    $('#generator-summary-wrapper').show();
+    $('#generator-summary').empty();
+
+    processedDocuments.forEach((document) => {
+        $('#generator-summary').append(
+            `<tr>
+                <td>${document.path}</td>
+                <td>${document.pdfGenerated}</td>
+                <td>${document.recipient}</td>
+                <td>${document.pdfGenerated ? document.confirmationLocation : ''}</td>
+            </tr>`
+        );
+    });
 }
 
 document.addEventListener('drop', (event) => {
@@ -31,6 +48,7 @@ document.addEventListener('drop', (event) => {
             paths,
             sender: $('#generator-sender-select').val()
         }
+        $('#generator-summary-wrapper').hide();
         ipcRenderer.send('processDocuments', processRequest);
     }
 });
@@ -38,6 +56,7 @@ document.addEventListener('drop', (event) => {
 ipcRenderer.on('processDocumentsResponse', (event, arg) => {
     console.log('Processing response from backend:');
     console.log(arg);
+    renderProcessingSummary(arg);
 });
 
 
