@@ -2,7 +2,9 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as log from 'electron-log';
 import * as path from 'path';
 import { DocumentProcessor } from './services/document-processor';
+import { PdfGenerator } from './services/pdf-generator';
 import { PreferencesService } from './services/preferences-service';
+import { ProofOfPostageService } from './services/proof-of-postage-service';
 import { RecipientExtractor } from './services/recipient-extractor';
 import { SenderStore } from './services/sender-store';
 
@@ -54,45 +56,53 @@ app.on('activate', () => {
   }
 });
 
+
+const preferencesService = new PreferencesService(app);
+const senderStore = new SenderStore(preferencesService);
+const recipientExtractor = new RecipientExtractor();
+const documentProcessor = new DocumentProcessor(recipientExtractor);
+const pdfGenerator = new PdfGenerator();
+const proofOfPostageService = new ProofOfPostageService(documentProcessor, pdfGenerator, senderStore);
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
 // register events
 ipcMain.on('processDocuments', async (event, arg) => {
   log.debug(`Got request to process: ${JSON.stringify(arg)}`);
-  event.reply('processDocumentsResponse', await new DocumentProcessor(new RecipientExtractor()).processRequest(arg))
+  event.reply('processDocumentsResponse', await proofOfPostageService.processRequest(arg))
 });
 
 /**
  * Senders integration
  */
 ipcMain.on('getListOfSenders', (event, arg) => {
-  event.returnValue = new SenderStore(new PreferencesService(app)).getAllSenders();
+  event.returnValue = senderStore.getAllSenders();
 });
 
 ipcMain.on('addSender', (event, arg) => {
-  event.returnValue = new SenderStore(new PreferencesService(app)).addSender(arg);
+  event.returnValue = senderStore.addSender(arg);
 });
 
 ipcMain.on('deleteSender', (event, arg) => {
-  event.returnValue = new SenderStore(new PreferencesService(app)).deleteSender(arg);
+  event.returnValue = senderStore.deleteSender(arg);
 });
 
 ipcMain.on('setSenderAsDefault', (event, arg) => {
-  event.returnValue = new SenderStore(new PreferencesService(app)).setSenderAsDefault(arg);
+  event.returnValue = senderStore.setSenderAsDefault(arg);
 })
 
 /**
  * Preferences integration
  */
 ipcMain.on('getPreferences', (event, arg) => {
-  event.returnValue = new PreferencesService(app).getUserPreferences();
+  event.returnValue = preferencesService.getUserPreferences();
 });
 
 ipcMain.on('savePreferences', (event, arg) => {
-  event.returnValue = new PreferencesService(app).storeUserPreferences(arg);
+  event.returnValue = preferencesService.storeUserPreferences(arg);
 });
 
 ipcMain.on('changeSenderFileLocation', (event, arg) => {
-  event.returnValue = new PreferencesService(app).changeSendersFileLocation();
+  event.returnValue = preferencesService.changeSendersFileLocation();
 });
