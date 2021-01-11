@@ -62,7 +62,7 @@ const senderStore = new SenderStore(preferencesService);
 const recipientExtractor = new RecipientExtractor();
 const documentProcessor = new DocumentProcessor(recipientExtractor);
 const pdfGenerator = new PdfGenerator();
-const proofOfPostageService = new ProofOfPostageService(documentProcessor, pdfGenerator, senderStore);
+const proofOfPostageService = new ProofOfPostageService(documentProcessor, pdfGenerator, senderStore, preferencesService);
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

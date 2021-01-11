@@ -8,7 +8,7 @@ export class PdfGenerator {
     async safelyGenerateFile(sender: Sender, recipient: string[], saveLocation?: string): Promise<any> {
         return this.generate(sender, recipient, saveLocation)
             .catch((e) => {
-                console.error('Error while trying to generate PDF', e);
+                log.error('Error while trying to generate PDF', e);
                 return null;
             });
     }
@@ -27,7 +27,8 @@ export class PdfGenerator {
             url: 'http://p.ar2oor.pl/potwierdzenia/pdf.php',
             data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            responseType: 'arraybuffer'
+            responseType: 'arraybuffer',
+            timeout: 5000
         });
 
         log.info(`PdfGenerator: File generation response status: ${response.status}`);
