@@ -20,6 +20,7 @@ export class PreferencesService {
     }
 
     changeSendersFileLocation(): void {
+        const preferences = this.getUserPreferences();
         const path = dialog.showSaveDialogSync({
             defaultPath: this.getUserPreferences().sendersStoreLocation,
             filters: [
@@ -33,7 +34,22 @@ export class PreferencesService {
             return;
         }
         this.storeUserPreferences({
+            ...preferences,
             sendersStoreLocation: path
+        });
+    }
+
+    changeConfirmationsLocation(): void {
+        const path = dialog.showOpenDialogSync({
+            properties: ['openDirectory']
+        });
+        if (!path || !path.length || !path[0].length) {
+            return;
+        }
+        const preferences = this.getUserPreferences();
+        this.storeUserPreferences({
+            ...preferences,
+            confirmationsLocation: path[0]
         });
     }
 
@@ -47,6 +63,10 @@ export class PreferencesService {
             sendersStoreLocation: path.join(
                 this.app.getPath('appData'),
                 'confirmation-generator-senders.json'
+            ),
+            confirmationsLocation: path.join(
+                this.app.getPath('appData'),
+                'confirmations-pdf'
             )
         }
     }
@@ -62,4 +82,5 @@ export class PreferencesService {
 
 export interface UserPreferences {
     sendersStoreLocation: string;
+    confirmationsLocation: string;
 }
