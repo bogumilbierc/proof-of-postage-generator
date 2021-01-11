@@ -40,7 +40,7 @@ Wygląd zakładki:
 
 ### Preferencje
 
-W zakładce "Preference" możemy ustalić lokalizację pliku z nadawcami oraz lokalizację zapisu wygenerowanych potwierdzeń.
+W zakładce "Preferencje" możemy ustalić lokalizację pliku z nadawcami oraz lokalizację zapisu wygenerowanych potwierdzeń.
 
 ![Okno preferencji](/docs/preferences-tab.png)
 
