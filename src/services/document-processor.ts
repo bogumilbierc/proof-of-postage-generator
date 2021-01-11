@@ -48,7 +48,8 @@ export class DocumentProcessor {
             const recipient = this.recipientExtractor.extractRecipient(document?.value);
             return {
                 path,
-                recipient
+                recipient,
+                success: recipient?.length > 0
             }
         } catch (e) {
             log.error(`Error while processing at path: ${path}`);

@@ -44,6 +44,12 @@ export class SenderStore {
         this.storeSenders(updatedSenders);
     }
 
+    getSender(name: string): Sender {
+        const senders = this.getAllSenders();
+        const sender = senders.find((sender: Sender) => sender.name === name);
+        return sender;
+    }
+
     private storeSenders(senders: Sender[]): void {
         const sendersLocation = this.preferencesService.getUserPreferences().sendersStoreLocation;
         log.debug(`Storing list of senders in: ${sendersLocation}`);
