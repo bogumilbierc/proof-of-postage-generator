@@ -24,16 +24,15 @@ export class ProofOfPostageService {
         log.debug(`ProofOfPostageService: Got sender details: ${JSON.stringify(sender)}`);
         const processedDocuments: ProcessedDocument[] = await this.documentProcessor.processRequest(request);
         log.debug(`ProofOfPostageService: Documents processed: ${JSON.stringify(processedDocuments)}`);
-        // const downloadFilePromises = processedDocuments
-        //     .filter((document: ProcessedDocument) => document.success)
-        //     .map((document: ProcessedDocument) => {
-        //         this.pdfGenerator.safelyGenerateFile(sender, document.recipient, document.path + '_confirmatio.pdf');
-        //     });
-        // log.debug(`ProofOfPostageService: Created promises for file downloading`);
-        // await Promise.all(downloadFilePromises);
-        await this.pdfGenerator.safelyGenerateFile(sender, processedDocuments[0].recipient, this.getConfirmationFilePath(processedDocuments[0]));
 
-        log.debug(`ProofOfPostageService: File downloading promises resolved`);
+        for (let document of processedDocuments) {
+            if (document.success) {
+                document.pdfGenerated = await this.pdfGenerator.safelyGenerateFile(sender, document.recipient, this.getConfirmationFilePath(document));
+            } else {
+                document.pdfGenerated = false;
+            }
+        }
+        log.debug(`ProofOfPostageService: All documents processed`);
         return processedDocuments;
     }
 
@@ -49,7 +48,7 @@ export class ProofOfPostageService {
         const rootConfirmationsFolder = this.preferencesService.getUserPreferences().confirmationsLocation;
         const date = new Date();
         const day = `${date.getDay()}`.padStart(2, '0');
-        const month = `${date.getMonth()}`.padStart(2,'0');
+        const month = `${date.getMonth()}`.padStart(2, '0');
         const year = date.getFullYear();
         const folderPath = path.join(
             rootConfirmationsFolder,

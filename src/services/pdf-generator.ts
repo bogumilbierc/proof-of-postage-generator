@@ -5,15 +5,15 @@ import { Sender } from "./sender-store";
 
 export class PdfGenerator {
 
-    async safelyGenerateFile(sender: Sender, recipient: string[], saveLocation?: string): Promise<any> {
+    async safelyGenerateFile(sender: Sender, recipient: string[], saveLocation?: string): Promise<boolean> {
         return this.generate(sender, recipient, saveLocation)
             .catch((e) => {
                 log.error('Error while trying to generate PDF', e);
-                return null;
+                return false;
             });
     }
 
-    async generate(sender: Sender, recipient: string[], saveLocation?: string): Promise<any> {
+    private async generate(sender: Sender, recipient: string[], saveLocation?: string): Promise<any> {
         log.debug(`PdfGenerator: Will try to generate PDF for Sender: ${JSON.stringify(sender)} and recipient: ${JSON.stringify(recipient)}`);
 
         const bodyFormData = new URLSearchParams();
@@ -39,6 +39,6 @@ export class PdfGenerator {
             log.info(`PdfGenerator: Saved PDF file under: ${saveLocation}`);
         }
 
-        return response.data;
+        return true;
     }
 }

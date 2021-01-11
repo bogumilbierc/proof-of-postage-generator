@@ -3,4 +3,5 @@ export interface ProcessedDocument {
     recipient?: string[];
     success?: boolean;
     message?: string;
+    pdfGenerated?: boolean;
 }
