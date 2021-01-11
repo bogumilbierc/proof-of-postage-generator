@@ -2,6 +2,7 @@ import { dialog } from 'electron';
 import * as log from 'electron-log';
 import { ProcessDocumentsRequest } from '../models/process-documents-request.model';
 import { ProcessedDocument } from '../models/processed-document.model';
+import { MultipleRecipientsExtractor } from './multiple-recipients-extractor';
 import { RecipientExtractor } from './recipient-extractor';
 const mammoth = require('mammoth');
 
@@ -49,6 +50,7 @@ export class DocumentProcessor {
         try {
             const document = await mammoth.extractRawText({ path });
             const recipient = this.recipientExtractor.extractRecipient(document?.value);
+            new MultipleRecipientsExtractor().extractRecipients(document?.value);
             return {
                 path,
                 recipient,
