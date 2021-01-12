@@ -13,13 +13,15 @@ export class AddressLinesExtractor {
 
     static readonly MAXIUM_LINES_AFTER_LAST_POSCODE: number = 10;
     static readonly POSTCODE_CITY_REGEX = /\d{2}-\d{3} \D{3,}$/;
+    static readonly CITY_DATE_START_REGEX = /^\D{3,}, dnia/;
+    static readonly CITY_DATE_END_REGEX = /(\d{4} roku)|(\d{4} r.)/;
 
     extractLinesWithPotentialAddresses(documentText: string): string[] {
         const splitted = documentText
             ?.split('\n')
             ?.filter((line: string) => !!line);
 
-        if (!splitted.length) {
+        if (!splitted?.length) {
             return [];
         }
 
@@ -29,8 +31,10 @@ export class AddressLinesExtractor {
         let numberOfPostcodes = 0;
 
         for (let i = 0; i < splitted.length; i++) {
-            const line = splitted[i];
-            linesToTake.push(line);
+            const line = splitted[i]?.trim();
+            if (!this.isDateAndCityLine(line)) {
+                linesToTake.push(line);
+            }
 
             if (this.isPostcodeLine(line)) {
                 lastLineWithPostcode = i;
@@ -42,7 +46,11 @@ export class AddressLinesExtractor {
             }
         }
 
-        linesToTake.length = lastLineWithPostcode + 1; // remove lines after last postcode - they are useless
+        if (!linesToTake.length) {
+            return [];
+        }
+
+        linesToTake.length = lastLineWithPostcode;
 
         return linesToTake;
     }
@@ -66,6 +74,10 @@ export class AddressLinesExtractor {
             return true;
         }
         return false;
+    }
+
+    private isDateAndCityLine(text: string): boolean {
+        return AddressLinesExtractor.CITY_DATE_START_REGEX.test(text) || AddressLinesExtractor.CITY_DATE_END_REGEX.test(text);
     }
 
     private isPostcodeLine(text: string): boolean {
