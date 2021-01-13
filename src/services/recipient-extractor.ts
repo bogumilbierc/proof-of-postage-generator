@@ -48,7 +48,8 @@ export class RecipientExtractor {
             }
         }
 
-        return extractedAddressLines;
+        return extractedAddressLines
+            .filter((line) => line);
     }
 
     private isLineAddressLine(text: string): boolean {

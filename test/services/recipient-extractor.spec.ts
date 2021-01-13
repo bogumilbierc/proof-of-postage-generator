@@ -22,15 +22,4 @@ describe('RecipientExtractor', () => {
         ]
         expect(extractor.extractRecipient(documentText)).toEqual(expected);
     });
-
-    it('should propertly extract address if header date has format "dd mmmm yyyy" and recipient name has one line', () => {
-        const documentText = '"\n\nWarszawa, dnia 1 grudnia 2020 r.\n\n\nSomeCompany Sp. z o.o. \n\nul. Testowa 80/82\n\n00-100 Warszawa\n\n\n\nPRZEDSĄDOWE WEZWANIE DO ZAPŁATY\n\n\n\nDziałając w imieniu RODO';
-        const expected = [
-            'SomeCompany Sp. z o.o.',
-            'ul. Testowa 80/82',
-            '00-100 Warszawa'
-        ];
-    });
-
-
 });
