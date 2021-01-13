@@ -13,7 +13,7 @@ export class PdfGenerator {
             });
     }
 
-    private async generate(sender: Sender, recipient: string[], saveLocation?: string): Promise<any> {
+    private async generate(sender: Sender, recipient: string[], saveLocation?: string): Promise<boolean> {
         log.debug(`PdfGenerator: Will try to generate PDF for Sender: ${JSON.stringify(sender)} and recipient: ${JSON.stringify(recipient)}`);
 
         const bodyFormData = new URLSearchParams();

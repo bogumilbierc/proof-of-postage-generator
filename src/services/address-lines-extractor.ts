@@ -59,8 +59,8 @@ export class AddressLinesExtractor {
         }
 
         linesToTake.length = lastLineWithPostcode + 1;
-        log.error('Unfiltered lines:');
-        log.error(linesToTake);
+        log.debug('Unfiltered lines:');
+        log.debug(linesToTake);
 
         return linesToTake
             .filter((line: string) => {
@@ -97,7 +97,7 @@ export class AddressLinesExtractor {
         ];
 
         const matchinRegex = linesToFilterOutRegexes.find((regex: RegExp) => regex.test(text));
-        log.error(`Matching regex: ${matchinRegex}`);
+        log.debug(`Matching regex: ${matchinRegex}`);
         return !!matchinRegex;
     }
 

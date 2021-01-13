@@ -25,7 +25,7 @@ export class ProofOfPostageService {
         const processedDocuments: ProcessedDocument[] = await this.documentProcessor.processRequest(request);
         log.debug(`ProofOfPostageService: Documents processed: ${JSON.stringify(processedDocuments)}`);
 
-        for (let document of processedDocuments) {
+        for (const document of processedDocuments) {
             if (document.success) {
                 const confirmationPath = this.getConfirmationFilePath(document)
                 document.confirmationLocation = confirmationPath;
