@@ -1,5 +1,5 @@
 
-import { AddressLinesExtractor } from '../../src/services/address-lines-extractor';
+import { AddressLinesExtractor } from '../../../src/services/document-recipients/address-lines-extractor';
 
 describe('AddressLinesExtractor', () => {
 

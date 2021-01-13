@@ -1,5 +1,5 @@
 import * as log from 'electron-log';
-import { Recipient } from "../models/recipient.model";
+import { Recipient } from "../../models/recipient.model";
 import { AddressLineUtils } from './address-line-utils';
 import { AddressLinesExtractor } from './address-lines-extractor';
 

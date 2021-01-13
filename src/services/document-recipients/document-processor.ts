@@ -1,7 +1,7 @@
 import { dialog } from 'electron';
 import * as log from 'electron-log';
-import { ProcessDocumentsRequest } from '../models/process-documents-request.model';
-import { ProcessedDocument } from '../models/processed-document.model';
+import { ProcessDocumentsRequest } from '../../models/process-documents-request.model';
+import { ProcessedDocument } from '../../models/processed-document.model';
 import { AddressLinesExtractor } from './address-lines-extractor';
 import { MultipleRecipientsExtractor } from './multiple-recipients-extractor';
 import { RecipientExtractor } from './recipient-extractor';

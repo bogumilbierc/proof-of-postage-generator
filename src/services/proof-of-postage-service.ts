@@ -2,7 +2,7 @@ import * as log from 'electron-log';
 import * as path from 'path';
 import { ProcessDocumentsRequest } from "../models/process-documents-request.model";
 import { ProcessedDocument } from "../models/processed-document.model";
-import { DocumentProcessor } from "./document-processor";
+import { DocumentProcessor } from "./document-recipients/document-processor";
 import { PdfGenerator } from "./pdf-generator";
 import { PreferencesService } from './preferences-service';
 import { SenderStore } from "./sender-store";

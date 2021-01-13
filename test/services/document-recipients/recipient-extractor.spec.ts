@@ -1,4 +1,4 @@
-import { RecipientExtractor } from '../../src/services/recipient-extractor';
+import { RecipientExtractor } from '../../../src/services/document-recipients/recipient-extractor';
 
 describe('RecipientExtractor', () => {
 

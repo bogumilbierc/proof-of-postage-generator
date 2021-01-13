@@ -1,11 +1,11 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as log from 'electron-log';
 import * as path from 'path';
-import { DocumentProcessor } from './services/document-processor';
+import { DocumentProcessor } from './services/document-recipients/document-processor';
+import { RecipientExtractor } from './services/document-recipients/recipient-extractor';
 import { PdfGenerator } from './services/pdf-generator';
 import { PreferencesService } from './services/preferences-service';
 import { ProofOfPostageService } from './services/proof-of-postage-service';
-import { RecipientExtractor } from './services/recipient-extractor';
 import { SenderStore } from './services/sender-store';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

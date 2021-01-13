@@ -1,7 +1,7 @@
-import { ProcessDocumentsRequest } from '../../src/models/process-documents-request.model';
-import { ProcessedDocument } from '../../src/models/processed-document.model';
-import { DocumentProcessor } from '../../src/services/document-processor';
-import { RecipientExtractor } from '../../src/services/recipient-extractor';
+import { ProcessDocumentsRequest } from '../../../src/models/process-documents-request.model';
+import { ProcessedDocument } from '../../../src/models/processed-document.model';
+import { DocumentProcessor } from '../../../src/services/document-recipients/document-processor';
+import { RecipientExtractor } from '../../../src/services/document-recipients/recipient-extractor';
 
 
 describe('DocumentProcessor', () => {
