@@ -13,8 +13,21 @@ export class AddressLinesExtractor {
     ]
 
     static readonly MAXIUM_LINES_AFTER_LAST_POSCODE: number = 10;
-    static readonly CITY_DATE_START_REGEX = /^\D{3,}, dnia/;
-    static readonly CITY_DATE_END_REGEX = /(\d{4} roku)|(\d{4} r.)/;
+
+    static readonly PESEL_REGEXES: RegExp[] = [
+        /^PESEL ?\d{11}$/
+    ]
+
+    static readonly CITY_AND_DATE_REGEXES: RegExp[] = [
+        /^\D{3,}, dnia/,
+        /(\d{4} roku)|(\d{4} r.)/,
+        /\D*, ?\d{1,2} \D* \d{4}r/
+    ]
+
+    static readonly RECIPIENT_GROUP_CAPTION_REGEXES: RegExp[] = [
+        /^Powód:\s*.?$/,
+        /^Pozwani:\s*.?$/
+    ]
 
     extractLinesWithPotentialAddresses(documentText: string): string[] {
         const splitted = documentText
@@ -31,10 +44,7 @@ export class AddressLinesExtractor {
 
         for (let i = 0; i < splitted.length; i++) {
             const line = splitted[i]?.trim();
-            if (!this.isDateAndCityLine(line)) {
-                linesToTake.push(line);
-            }
-
+            linesToTake.push(line);
             if (AddressLineUtils.isPostcodeLine(line)) {
                 lastLineWithPostcode = i;
             }
@@ -48,9 +58,14 @@ export class AddressLinesExtractor {
             return [];
         }
 
-        linesToTake.length = lastLineWithPostcode;
+        linesToTake.length = lastLineWithPostcode + 1;
+        log.error('Unfiltered lines:');
+        log.error(linesToTake);
 
-        return linesToTake;
+        return linesToTake
+            .filter((line: string) => {
+                return !this.shouldFilterOutLine(line)
+            });
     }
 
     private isEndOfAddressSectionByDistanceToLastPostcodeLine(currentLineIndex: number, lastLineWithPostcode: number): boolean {
@@ -74,7 +89,16 @@ export class AddressLinesExtractor {
         return false;
     }
 
-    private isDateAndCityLine(text: string): boolean {
-        return AddressLinesExtractor.CITY_DATE_START_REGEX.test(text) || AddressLinesExtractor.CITY_DATE_END_REGEX.test(text);
+    private shouldFilterOutLine(text: string): boolean {
+        const linesToFilterOutRegexes = [
+            ...AddressLinesExtractor.PESEL_REGEXES,
+            ...AddressLinesExtractor.CITY_AND_DATE_REGEXES,
+            ...AddressLinesExtractor.RECIPIENT_GROUP_CAPTION_REGEXES
+        ];
+
+        const matchinRegex = linesToFilterOutRegexes.find((regex: RegExp) => regex.test(text));
+        log.error(`Matching regex: ${matchinRegex}`);
+        return !!matchinRegex;
     }
+
 }

@@ -51,10 +51,12 @@ export class DocumentProcessor {
         try {
             const document = await mammoth.extractRawText({ path });
             const recipient = this.recipientExtractor.extractRecipient(document?.value);
-            new MultipleRecipientsExtractor(new AddressLinesExtractor()).extractRecipients(document?.value);
+            const recipients = new MultipleRecipientsExtractor(new AddressLinesExtractor()).extractRecipients(document?.value);
+
             return {
                 path,
                 recipient,
+                recipients,
                 success: recipient?.length > 0
             }
         } catch (e) {

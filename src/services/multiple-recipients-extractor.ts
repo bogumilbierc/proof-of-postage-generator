@@ -16,14 +16,22 @@ export class MultipleRecipientsExtractor {
 
         const linesWithPotentialAddresses = this.addressLinesExtractor.extractLinesWithPotentialAddresses(documentText);
 
-        log.info('MultipleRecipientsExtractor: Lines with potential addresses:');
-        log.info(linesWithPotentialAddresses);
+        log.debug('MultipleRecipientsExtractor: Lines with potential addresses:');
+        log.debug(linesWithPotentialAddresses);
 
         const recipients = this.splitAddressLinesIntoRecipients(linesWithPotentialAddresses);
-        log.info('MultipleRecipientsExtractor: Recipients');
-        log.info(recipients);
+        log.debug('MultipleRecipientsExtractor: Recipients');
+        log.debug(recipients);
 
-        return [];
+        const validRecipients = recipients
+            .filter((recipient: Recipient): boolean => {
+                return this.hasValidAddress(recipient);
+            });
+
+        log.debug('MultipleRecipientsExtractor: Valid Recipients');
+        log.debug(recipients);
+
+        return validRecipients;
     }
 
     private splitAddressLinesIntoRecipients(addressLines: string[]): Recipient[] {
@@ -49,12 +57,15 @@ export class MultipleRecipientsExtractor {
         });
 
         return recipients;
-
     }
+
 
     private hasValidAddress(recipient: Recipient): boolean {
         // check if address has valid postcode and at least two lines
-        return true;
+        const hasAddressLines = recipient.address?.find((addressLine: string): boolean => {
+            return AddressLineUtils.isPostcodeLine(addressLine);
+        });
+        return hasAddressLines && recipient?.address?.length >= 2;
     }
 
 }

@@ -76,7 +76,7 @@ ipcMain.on('processDocuments', async (event, arg) => {
 /**
  * Senders integration
  */
-ipcMain.on('getListOfSenders', (event, arg) => {
+ipcMain.on('getListOfSenders', (event,) => {
   event.returnValue = senderStore.getAllSenders();
 });
 
@@ -95,7 +95,7 @@ ipcMain.on('setSenderAsDefault', (event, arg) => {
 /**
  * Preferences integration
  */
-ipcMain.on('getPreferences', (event, arg) => {
+ipcMain.on('getPreferences', (event,) => {
   event.returnValue = preferencesService.getUserPreferences();
 });
 
@@ -103,10 +103,10 @@ ipcMain.on('savePreferences', (event, arg) => {
   event.returnValue = preferencesService.storeUserPreferences(arg);
 });
 
-ipcMain.on('changeSenderFileLocation', (event, arg) => {
+ipcMain.on('changeSenderFileLocation', (event,) => {
   event.returnValue = preferencesService.changeSendersFileLocation();
 });
 
-ipcMain.on('changeConfirmationsLocation', (event, arg) => {
+ipcMain.on('changeConfirmationsLocation', (event,) => {
   event.returnValue = preferencesService.changeConfirmationsLocation();
 })

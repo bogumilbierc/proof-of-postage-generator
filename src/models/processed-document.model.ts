@@ -1,3 +1,5 @@
+import { Recipient } from "./recipient.model";
+
 export interface ProcessedDocument {
     path: string;
     recipient?: string[];
@@ -5,4 +7,5 @@ export interface ProcessedDocument {
     message?: string;
     pdfGenerated?: boolean;
     confirmationLocation?: string;
+    recipients?: Recipient[];
 }
