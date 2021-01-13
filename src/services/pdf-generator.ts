@@ -6,6 +6,11 @@ import { Sender } from "./sender-store";
 export class PdfGenerator {
 
     async safelyGenerateFile(sender: Sender, recipient: string[], saveLocation?: string): Promise<boolean> {
+
+        if (!this.isPdfGenerationEnabled()) {
+            return Promise.resolve(false);
+        }
+
         return this.generate(sender, recipient, saveLocation)
             .catch((e) => {
                 log.error('Error while trying to generate PDF', e);
@@ -40,5 +45,9 @@ export class PdfGenerator {
         }
 
         return true;
+    }
+
+    private isPdfGenerationEnabled(): boolean {
+        return !!process.env['SKIP_PDF']; // add some configuration mechanism
     }
 }

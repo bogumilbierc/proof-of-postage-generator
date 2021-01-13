@@ -16,6 +16,16 @@ function onProcessSingleFileClick() {
     ipcRenderer.send('processDocuments', processRequest);
 }
 
+function renderRecipients(document) {
+    if (!document.recipients) {
+        return '';
+    }
+    return document.recipients.map((recipient) => {
+        return `<p><b>Nazwa:</b> ${recipient.name}</p>`+ 
+               `<p><b>Adres:</b> ${recipient.address.join('<br/>')}</p>`
+    });
+}
+
 function renderProcessingSummary(processedDocuments) {
     $('#generator-summary-wrapper').show();
     $('#generator-summary').empty();
@@ -25,7 +35,8 @@ function renderProcessingSummary(processedDocuments) {
             `<tr>
                 <td>${document.path}</td>
                 <td>${document.pdfGenerated}</td>
-                <td>${document.recipient}</td>
+                <td>${document.recipients.length}</td>
+                <td>${renderRecipients(document)}</td>
                 <td>${document.pdfGenerated ? document.confirmationLocation : ''}</td>
             </tr>`
         );
@@ -64,3 +75,4 @@ document.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.stopPropagation();
 });
+[]
