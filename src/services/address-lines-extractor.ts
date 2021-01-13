@@ -1,4 +1,5 @@
 import * as log from 'electron-log';
+import { AddressLineUtils } from './address-line-utils';
 
 export class AddressLinesExtractor {
 
@@ -12,7 +13,6 @@ export class AddressLinesExtractor {
     ]
 
     static readonly MAXIUM_LINES_AFTER_LAST_POSCODE: number = 10;
-    static readonly POSTCODE_CITY_REGEX = /\d{2}-\d{3} \D{3,}$/;
     static readonly CITY_DATE_START_REGEX = /^\D{3,}, dnia/;
     static readonly CITY_DATE_END_REGEX = /(\d{4} roku)|(\d{4} r.)/;
 
@@ -28,7 +28,6 @@ export class AddressLinesExtractor {
         const linesToTake: string[] = [];
 
         let lastLineWithPostcode = 0;
-        let numberOfPostcodes = 0;
 
         for (let i = 0; i < splitted.length; i++) {
             const line = splitted[i]?.trim();
@@ -36,9 +35,8 @@ export class AddressLinesExtractor {
                 linesToTake.push(line);
             }
 
-            if (this.isPostcodeLine(line)) {
+            if (AddressLineUtils.isPostcodeLine(line)) {
                 lastLineWithPostcode = i;
-                numberOfPostcodes++;
             }
 
             if (this.isEndOfAddressSectionByTextContent(line) || this.isEndOfAddressSectionByDistanceToLastPostcodeLine(i, lastLineWithPostcode)) {
@@ -78,9 +76,5 @@ export class AddressLinesExtractor {
 
     private isDateAndCityLine(text: string): boolean {
         return AddressLinesExtractor.CITY_DATE_START_REGEX.test(text) || AddressLinesExtractor.CITY_DATE_END_REGEX.test(text);
-    }
-
-    private isPostcodeLine(text: string): boolean {
-        return AddressLinesExtractor.POSTCODE_CITY_REGEX.test(text);
     }
 }

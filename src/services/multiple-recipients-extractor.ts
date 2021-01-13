@@ -21,6 +21,19 @@ export class MultipleRecipientsExtractor {
         return [];
     }
 
+    private splitAddressLinesIntoRecipients(addressLines: string[]): Recipient[] {
+
+        if (!addressLines || !addressLines.length) {
+            return [];
+        }
+
+        const recipients: Recipient[] = [];
+        let currentRecipient: Recipient = {};
+
+        return recipients;
+
+    }
+
     private hasValidAddress(recipient: Recipient): boolean {
         // check if address has valid postcode and at least two lines
         return true;
