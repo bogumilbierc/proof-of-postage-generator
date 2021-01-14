@@ -130,9 +130,6 @@ describe('MultipleRecipientsExtractor', () => {
             },
             {
                 address: [
-                    'reprezentowany przez',
-                    'radcę prawnego Annę Spam-Spamer',
-                    'adres do doreczeń:',
                     'Kancelaria Radcy Prawnego',
                     'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
                 ],

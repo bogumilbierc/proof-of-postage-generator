@@ -88,4 +88,45 @@ describe('AddressRefiner', () => {
 
         expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
     });
+
+    it('should choose delivery address (delivery address header has no additional content)', () => {
+        const recipient: Recipient = {
+            address: [
+                'reprezentowany przez',
+                'radcę prawnego Annę Spam-Spamer',
+                'adres do doreczeń:',
+                'Kancelaria Radcy Prawnego',
+                'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
+            ],
+        };
+
+        const expected: Recipient = {
+            address: [
+                'Kancelaria Radcy Prawnego',
+                'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
+            ]
+        };
+
+        expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
+    });
+
+    it('should choose delivery address (delivery address header has actual content as well)', () => {
+        const recipient: Recipient = {
+            address: [
+                'reprezentowany przez',
+                'radcę prawnego Annę Spam-Spamer',
+                'adres do doreczeń:Kancelaria Radcy Prawnego',
+                'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
+            ],
+        };
+
+        const expected: Recipient = {
+            address: [
+                'Kancelaria Radcy Prawnego',
+                'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
+            ]
+        };
+
+        expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
+    })
 });
