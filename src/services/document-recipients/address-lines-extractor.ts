@@ -15,19 +15,19 @@ export class AddressLinesExtractor {
     static readonly MAXIUM_LINES_AFTER_LAST_POSCODE: number = 10;
 
     static readonly PESEL_REGEXES: RegExp[] = [
-        /^PESEL ?\d{11}$/
+        /^PESEL ?\d{11}$/i
     ]
 
     static readonly CITY_AND_DATE_REGEXES: RegExp[] = [
-        /^\D{3,}, dnia/,
-        /(\d{4} roku)|(\d{4} r.)/,
-        /\D*, ?\d{1,2} \D* \d{4}r/
+        /^\D{3,}, dnia/i,
+        /(\d{4} roku)|(\d{4} r.)/i,
+        /\D*, ?\d{1,2} \D* \d{4}r/i
     ]
 
     static readonly RECIPIENT_GROUP_CAPTION_REGEXES: RegExp[] = [
-        /^Powód:\s*.?$/,
-        /^Pozwan\w*:\s*.?$/,        
-        /^Powodowie\w*:\s*.?$/,
+        /^Powód:\s*.?$/i,
+        /^Pozwan\w*:\s*.?$/i,        
+        /^Powodowie\w*:\s*.?$/i,
     ]
 
     extractLinesWithPotentialAddresses(documentText: string): string[] {

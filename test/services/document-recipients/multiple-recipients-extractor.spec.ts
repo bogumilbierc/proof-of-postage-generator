@@ -142,9 +142,6 @@ describe('MultipleRecipientsExtractor', () => {
             },
             {
                 address: [
-                    'KRS nr 1110603992, NlP 3331638568',
-                    '(adres w aktach sprawy)',
-                    'Reprezentowana przez:',
                     'Radcę Prawnego Artura Bierć',
                     'Bierć Kancelaria Radców Prawnych',
                     'ul. Fabryczna 55',

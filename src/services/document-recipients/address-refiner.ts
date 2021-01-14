@@ -3,7 +3,8 @@ import { Recipient } from "../../models/recipient.model";
 export class AddressRefiner {
 
     static readonly PUNCTUATION_REGEX = /^\d{1}[.|)]\.?\s*/;
-    static readonly DELIVERY_ADDRESS_REGEX: RegExp = /^adres do dor[e|ę]cze[n|ń]:?\s*/
+    static readonly DELIVERY_ADDRESS_REGEX: RegExp = /^adres do dor[e|ę]cze[n|ń]:?\s*/i;
+    static readonly REPRESENTANT_REGEX: RegExp = /reprezentowan[i|a|y|ą] przez:\s*/i;
 
 
 
@@ -15,12 +16,9 @@ export class AddressRefiner {
         const rawAddress = recipient.address;
         const withoutPunctuation = this.removePunctuation(rawAddress);
         const deliveryAddress = this.chooseDeliveryAddress(withoutPunctuation);
-        // remove puncutation
-        // choose delivery address
-        // remove representants
-        // remove empty lines
+        const representantAddress = this.chooseRepresentant(deliveryAddress);
         return {
-            address: deliveryAddress
+            address: representantAddress
         };
     }
 
@@ -42,6 +40,20 @@ export class AddressRefiner {
         const deliveryAddressLines: string[] = addressLines.slice(lineWithDeliveryAddressIndex, addressLines.length);
 
         deliveryAddressLines[0] = deliveryAddressLines[0].replace(AddressRefiner.DELIVERY_ADDRESS_REGEX, '');
+        return deliveryAddressLines
+            .filter((line: string): boolean => !!line);
+    }
+
+    private chooseRepresentant(addressLines: string[]): string[] {
+        const lineWithRepresentant: number = addressLines.findIndex((addressLine: string): boolean => {
+            return AddressRefiner.REPRESENTANT_REGEX.test(addressLine);
+        });
+        if (lineWithRepresentant === -1) {
+            return addressLines;
+        }
+        const deliveryAddressLines: string[] = addressLines.slice(lineWithRepresentant, addressLines.length);
+
+        deliveryAddressLines[0] = deliveryAddressLines[0].replace(AddressRefiner.REPRESENTANT_REGEX, '');
         return deliveryAddressLines
             .filter((line: string): boolean => !!line);
     }
