@@ -4,9 +4,7 @@ export class AddressRefiner {
 
     static readonly PUNCTUATION_REGEX = /^\d{1}[.|)]\.?\s*/;
     static readonly DELIVERY_ADDRESS_REGEX: RegExp = /^adres do dor[e|ę]cze[n|ń]:?\s*/i;
-    static readonly REPRESENTANT_REGEX: RegExp = /reprezentowan[i|a|y|ą] przez:\s*/i;
-
-
+    static readonly REPRESENTANT_REGEX: RegExp = /reprezentowan[i|a|y|ą] przez:?\s*|kt[ó|o]r[ą|a|e] reprezentuje:?\s*|kt[ó|o]rego reprezentuje:?\s*|kt[ó|o]rych reprezentuje:?\s*/i;
 
     refineRecipientAddress(recipient: Recipient): Recipient {
 

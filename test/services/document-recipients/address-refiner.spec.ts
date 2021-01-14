@@ -154,4 +154,27 @@ describe('AddressRefiner', () => {
 
         expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
     });
+
+    it('should choose representant (different regex)', () => {
+        const recipient: Recipient = {
+            address: [
+                '',
+                'Octa Okęcie Spółka z ograniczoną odpowiedzialnością Spółka komandytowa',
+                'którą reprezentuje:',
+                'r. pr. Artura Bierć',
+                'Bierć Kancelaria Radców Prawnych',
+                'ul. Fabryczna 55, 05-270 Marki'
+            ]
+        };
+
+        const expected: Recipient = {
+            address: [
+                'r. pr. Artura Bierć',
+                'Bierć Kancelaria Radców Prawnych',
+                'ul. Fabryczna 55, 05-270 Marki'
+            ]
+        };
+
+        expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
+    });
 });

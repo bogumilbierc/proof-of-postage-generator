@@ -20,10 +20,11 @@ function renderRecipients(document) {
     if (!document.recipients) {
         return '';
     }
-    return document.recipients.map((recipient) => {
-        return `<p><b>Nazwa:</b> ${recipient.name}</p>`+ 
-               `<p><b>Adres:</b> ${recipient.address.join('<br/>')}</p>`
-    });
+    return document.recipients
+        .map((recipient) => {
+            return `<textarea>${recipient.address.join('\n')}</textarea>`
+        })
+        .join('<br/>');
 }
 
 function renderProcessingSummary(processedDocuments) {
