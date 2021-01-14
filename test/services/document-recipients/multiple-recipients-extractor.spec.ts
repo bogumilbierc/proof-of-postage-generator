@@ -19,7 +19,6 @@ describe('MultipleRecipientsExtractor', () => {
                     'pl. Krasińskich 2/4/6',
                     '00-207 Warszawa'
                 ],
-                name: "Sąd Apelacyjny w Warszawie"
             }
         ];
 
@@ -36,14 +35,12 @@ describe('MultipleRecipientsExtractor', () => {
                     'pl. Krasińskich 2/4/6',
                     '00-207 Warszawa',
                 ],
-                name: 'Sąd Apelacyjny w Warszawie'
             },
             {
                 address: [
                     "Jan Kowalski",
                     "ul.Kasztanowa 7, 10-200 Zawady",
                 ],
-                name: "Jan Kowalski"
             }
         ];
         expect(recipientsExtractor.extractRecipients(documentText)).toEqual(expected);
@@ -100,28 +97,24 @@ describe('MultipleRecipientsExtractor', () => {
                     'ul. Czerniakowska 100',
                     '00-454 Warszawa',
                 ],
-                name: 'Sąd Okręgowy w Warszawie',
             },
             {
                 address: [
                     '1.Jan Topczewski',
                     'ul. Brzozowa 42,05-230 Przewalanka',
                 ],
-                name: '1.Jan Topczewski',
             },
             {
                 address: [
                     '2. Anna Topczewska',
                     'ul. Brzozowa 42,05-230 Przewalanka',
                 ],
-                name: '2. Anna Topczewska',
             },
             {
                 address: [
                     '3. Robert Topczewski',
                     'ul. Brzozowa 42,11-200 Przewalanka',
                 ],
-                name: '3. Robert Topczewski',
             },
             {
                 address: [
@@ -132,7 +125,6 @@ describe('MultipleRecipientsExtractor', () => {
                     'Topczewski, NlP 1230021115',
                     'z siedzibą ul. Brzozowa 42,05-230 Przewalanka',
                 ],
-                name: 'prowadzący działalność gospodarczą w',
             },
             {
                 address: [
@@ -142,14 +134,12 @@ describe('MultipleRecipientsExtractor', () => {
                     'Kancelaria Radcy Prawnego',
                     'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
                 ],
-                name: 'reprezentowany przez',
             },
             {
                 address: [
                     '1) Przewalanka Dom Sp. z o.o.',
                     'ul. Warszawska 14A, 05-230 Przewalanka',
                 ],
-                name: '1) Przewalanka Dom Sp. z o.o.',
             },
             {
                 address: [
@@ -161,7 +151,6 @@ describe('MultipleRecipientsExtractor', () => {
                     'ul. Fabryczna 55',
                     '05-270 Marki',
                 ],
-                name: 'KRS nr 1110603992, NlP 3331638568',
             },
             {
                 address: [
@@ -169,7 +158,6 @@ describe('MultipleRecipientsExtractor', () => {
                     'KATARYNKI Sp. z o.o.',
                     'ul. K.Olszewskiego 8, 20-471 Grzędy'
                 ],
-                name: '2| Przedsiębiorstwo Produkcyjno Testowe',
             }
         ];
 
