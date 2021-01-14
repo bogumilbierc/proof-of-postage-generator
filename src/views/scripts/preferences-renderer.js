@@ -1,3 +1,6 @@
+/*global $*/
+/* global ipcRenderer*/
+
 function renderPreferences() {
     const preferences = ipcRenderer.sendSync('getPreferences');
     $("#senders-file-location").text(`Lokalizacja pliku z nadawcami: ${preferences.sendersStoreLocation}`);

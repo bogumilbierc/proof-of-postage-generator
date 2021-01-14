@@ -1,3 +1,5 @@
+/*global $*/
+
 const ipcRenderer = require('electron').ipcRenderer;
 
 function capitalize(word) {

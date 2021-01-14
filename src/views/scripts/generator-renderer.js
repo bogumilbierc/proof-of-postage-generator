@@ -1,3 +1,6 @@
+/*global $*/
+/* global ipcRenderer*/
+
 function renderGenerator() {
     console.log('rendering generator');
     const senders = ipcRenderer.sendSync('getListOfSenders');

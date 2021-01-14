@@ -1,3 +1,6 @@
+/*global $*/
+/* global ipcRenderer*/
+
 function renderSenders() {
     const senders = ipcRenderer.sendSync('getListOfSenders');
 

@@ -6,6 +6,7 @@ import { AddressLinesExtractor } from './address-lines-extractor';
 import { AddressRefiner } from './address-refiner';
 import { MultipleRecipientsExtractor } from './multiple-recipients-extractor';
 import { RecipientExtractor } from './recipient-extractor';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const mammoth = require('mammoth');
 
 export class DocumentProcessor {
