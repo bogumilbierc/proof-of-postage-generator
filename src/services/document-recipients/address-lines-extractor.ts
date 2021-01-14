@@ -24,12 +24,6 @@ export class AddressLinesExtractor {
         /\D*, ?\d{1,2} \D* \d{4}r/i
     ]
 
-    static readonly RECIPIENT_GROUP_CAPTION_REGEXES: RegExp[] = [
-        /^Powód:\s*.?$/i,
-        /^Pozwan\w*:\s*.?$/i,        
-        /^Powodowie\w*:\s*.?$/i,
-    ]
-
     extractLinesWithPotentialAddresses(documentText: string): string[] {
         const splitted = documentText
             ?.split('\n')
@@ -94,7 +88,6 @@ export class AddressLinesExtractor {
         const linesToFilterOutRegexes = [
             ...AddressLinesExtractor.PESEL_REGEXES,
             ...AddressLinesExtractor.CITY_AND_DATE_REGEXES,
-            ...AddressLinesExtractor.RECIPIENT_GROUP_CAPTION_REGEXES
         ];
 
         const matchinRegex = linesToFilterOutRegexes.find((regex: RegExp) => regex.test(text));

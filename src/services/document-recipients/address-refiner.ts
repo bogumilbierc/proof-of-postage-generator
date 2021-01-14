@@ -1,4 +1,5 @@
 import { Recipient } from "../../models/recipient.model";
+import { AddressLineUtils } from "./address-line-utils";
 
 export class AddressRefiner {
 
@@ -12,7 +13,8 @@ export class AddressRefiner {
             return recipient;
         }
         const rawAddress = recipient.address;
-        const withoutPunctuation = this.removePunctuation(rawAddress);
+        const withoutGroupHeaders = this.removeRecipientGroupHeaders(rawAddress);
+        const withoutPunctuation = this.removePunctuation(withoutGroupHeaders);
         const deliveryAddress = this.chooseDeliveryAddress(withoutPunctuation);
         const representantAddress = this.chooseRepresentant(deliveryAddress);
         return {
@@ -26,6 +28,18 @@ export class AddressRefiner {
                 return addressLine.replace(AddressRefiner.PUNCTUATION_REGEX, '')
             })
 
+    }
+
+    private removeRecipientGroupHeaders(addressLines: string[]): string[] {
+        return addressLines.
+            map((addressLine: string) => {
+                let cleanedLine = addressLine;
+                AddressLineUtils.RECIPIENT_GROUP_CAPTION_REGEXES.forEach((regex: RegExp) => {
+                    cleanedLine = cleanedLine.replace(regex, '');
+                });
+                return cleanedLine;
+            })
+            .filter((line: string) => !!line);
     }
 
     private chooseDeliveryAddress(addressLines: string[]): string[] {

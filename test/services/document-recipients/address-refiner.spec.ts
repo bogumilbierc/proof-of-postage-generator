@@ -89,6 +89,43 @@ describe('AddressRefiner', () => {
         expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
     });
 
+    it('should remove group headers (group header in separate line)', () => {
+        const recipient: Recipient = {
+            address: [
+                'Powód: ',
+                '1)Jan Topczewski',
+                'ul. Brzozowa 42,05-230 Przewalanka',
+            ],
+        };
+
+        const expected: Recipient = {
+            address: [
+                'Jan Topczewski',
+                'ul. Brzozowa 42,05-230 Przewalanka',
+            ],
+        };
+
+        expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
+    });
+
+    it('should remove group headers (group header as part of address line)', () => {
+        const recipient: Recipient = {
+            address: [
+                'Powód: 1)Jan Topczewski',
+                'ul. Brzozowa 42,05-230 Przewalanka',
+            ],
+        };
+
+        const expected: Recipient = {
+            address: [
+                'Jan Topczewski',
+                'ul. Brzozowa 42,05-230 Przewalanka',
+            ],
+        };
+
+        expect(refiner.refineRecipientAddress(recipient)).toEqual(expected);
+    });
+
     it('should choose delivery address (delivery address header has no additional content)', () => {
         const recipient: Recipient = {
             address: [

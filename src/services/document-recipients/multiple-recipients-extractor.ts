@@ -49,6 +49,14 @@ export class MultipleRecipientsExtractor {
         let currentRecipient: Recipient = { address: [] };
 
         addressLines.forEach((line: string) => {
+
+            if (AddressLineUtils.isBeginningOfNewGroupOfRecipients(line)) {
+                recipients.push({
+                    ...currentRecipient
+                });
+                currentRecipient = { address: [] }
+            }
+
             currentRecipient.address.push(line);
             if (AddressLineUtils.isPostcodeLine(line)) {
                 recipients.push({
