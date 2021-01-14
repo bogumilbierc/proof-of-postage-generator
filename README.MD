@@ -7,6 +7,12 @@ Pierwszy wiersz może (lecz nie musi) zawierać miasto oraz datę w jednym z dw�
 - "Warszawa, dnia 12 grudnia 2020 roku" (miesiąc pisany słownie)
 - "Warszawa, dnia 01.10.2019 roku" (miesiąc jako liczba)
 
+Następnie występuja lista stron, które mogą być zdefiniowane:
+- w postaci prostej (strona jest adresatem)
+- w postaci strony i reprezentanta (reprezentant jest adresatem)
+- w postaci strony/reprezentant i adresu do doręczeń (dane z adresu do doręczeń są podstawiane w miejscu adresata)
+- w postaci grup odbiorców (pozwani, powodowie) -> nagłówki te są usuwane a zawartość przetwarzana na postać adresatów 
+
 Przykładowy zrzut ekranu z pismem:
 ![Przykładowy dokument](/docs/sample-document.png)
 
