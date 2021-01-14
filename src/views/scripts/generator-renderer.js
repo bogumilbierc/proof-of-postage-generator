@@ -22,7 +22,7 @@ function renderRecipients(document) {
     }
     return document.recipients
         .map((recipient) => {
-            return `<textarea>${recipient.address.join('\n')}</textarea>`
+            return `<div class="form-group"><textarea class="form-control" rows=">${recipient.address.length}">${recipient.address.join('\n')}</textarea></div>`
         })
         .join('<br/>');
 }

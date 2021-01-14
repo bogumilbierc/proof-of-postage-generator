@@ -36,6 +36,9 @@ export class MultipleRecipientsExtractor {
 
         const refinedRecipients = validRecipients.map((recipient: Recipient) => this.addressRefiner.refineRecipientAddress(recipient));
 
+        log.debug('MultipleRecipientsExtractor: Refined Recipients');
+        log.debug(refinedRecipients);
+
         return refinedRecipients;
     }
 
