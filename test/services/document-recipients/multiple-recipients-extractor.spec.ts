@@ -47,6 +47,133 @@ describe('MultipleRecipientsExtractor', () => {
             }
         ];
         expect(recipientsExtractor.extractRecipients(documentText)).toEqual(expected);
+    });
+
+    it('should properly extract multiple recipients, with sections, numeration, representants', () => {
+        const documentText = [
+            'Warszawa, 19 sierpnia 2019r.',
+            'Sąd Okręgowy w Warszawie',
+            'XVI Wydział Gospodarczy',
+            'ul. Czerniakowska 100',
+            '00-454 Warszawa',
+            'Powód:',
+            '1.Jan Topczewski',
+            'ul. Brzozowa 42,05-230 Przewalanka',
+            'PESEL 21230509856',
+            '2. Anna Topczewska',
+            'ul. Brzozowa 42,05-230 Przewalanka',
+            'PESEL45672507225',
+            '3. Robert Topczewski',
+            'ul. Brzozowa 42,11-200 Przewalanka',
+            'PESEL 12120605398',
+            'prowadzący działalność gospodarczą w',
+            'formie spółki cywilnej',
+            'TOP-TIP Topczewski s.c. Borys',
+            'Topczewski, Danuta Topczewska, Rysiek',
+            'Topczewski, NlP 1230021115',
+            'z siedzibą ul. Brzozowa 42,05-230 Przewalanka',
+            'reprezentowany przez',
+            'radcę prawnego Annę Spam-Spamer',
+            'adres do doreczeń:',
+            'Kancelaria Radcy Prawnego',
+            'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
+            'Pozwani:  .',
+            '1) Przewalanka Dom Sp. z o.o.',
+            'ul. Warszawska 14A, 05-230 Przewalanka',
+            'KRS nr 1110603992, NlP 3331638568',
+            '(adres w aktach sprawy)',
+            'Reprezentowana przez:',
+            'Radcę Prawnego Artura Bierć',
+            'Bierć Kancelaria Radców Prawnych',
+            'ul. Fabryczna 55',
+            '05-270 Marki',
+            '2| Przedsiębiorstwo Produkcyjno Testowe',
+            'KATARYNKI Sp. z o.o.',
+            'ul. K.Olszewskiego 8, 20-471 Grzędy'
+        ].join('\n');
+
+        const expected: Recipient[] = [
+            {
+                address: [
+                    'Sąd Okręgowy w Warszawie',
+                    'XVI Wydział Gospodarczy',
+                    'ul. Czerniakowska 100',
+                    '00-454 Warszawa',
+                ],
+                name: 'Sąd Okręgowy w Warszawie',
+            },
+            {
+                address: [
+                    '1.Jan Topczewski',
+                    'ul. Brzozowa 42,05-230 Przewalanka',
+                ],
+                name: '1.Jan Topczewski',
+            },
+            {
+                address: [
+                    '2. Anna Topczewska',
+                    'ul. Brzozowa 42,05-230 Przewalanka',
+                ],
+                name: '2. Anna Topczewska',
+            },
+            {
+                address: [
+                    '3. Robert Topczewski',
+                    'ul. Brzozowa 42,11-200 Przewalanka',
+                ],
+                name: '3. Robert Topczewski',
+            },
+            {
+                address: [
+                    'prowadzący działalność gospodarczą w',
+                    'formie spółki cywilnej',
+                    'TOP-TIP Topczewski s.c. Borys',
+                    'Topczewski, Danuta Topczewska, Rysiek',
+                    'Topczewski, NlP 1230021115',
+                    'z siedzibą ul. Brzozowa 42,05-230 Przewalanka',
+                ],
+                name: 'prowadzący działalność gospodarczą w',
+            },
+            {
+                address: [
+                    'reprezentowany przez',
+                    'radcę prawnego Annę Spam-Spamer',
+                    'adres do doreczeń:',
+                    'Kancelaria Radcy Prawnego',
+                    'ul. Odrzutowa 8 / 42, 13-984 Warszawa',
+                ],
+                name: 'reprezentowany przez',
+            },
+            {
+                address: [
+                    '1) Przewalanka Dom Sp. z o.o.',
+                    'ul. Warszawska 14A, 05-230 Przewalanka',
+                ],
+                name: '1) Przewalanka Dom Sp. z o.o.',
+            },
+            {
+                address: [
+                    'KRS nr 1110603992, NlP 3331638568',
+                    '(adres w aktach sprawy)',
+                    'Reprezentowana przez:',
+                    'Radcę Prawnego Artura Bierć',
+                    'Bierć Kancelaria Radców Prawnych',
+                    'ul. Fabryczna 55',
+                    '05-270 Marki',
+                ],
+                name: 'KRS nr 1110603992, NlP 3331638568',
+            },
+            {
+                address: [
+                    '2| Przedsiębiorstwo Produkcyjno Testowe',
+                    'KATARYNKI Sp. z o.o.',
+                    'ul. K.Olszewskiego 8, 20-471 Grzędy'
+                ],
+                name: '2| Przedsiębiorstwo Produkcyjno Testowe',
+            }
+        ];
+
+        expect(recipientsExtractor.extractRecipients(documentText)).toEqual(expected);
     })
 
 });
