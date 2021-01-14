@@ -1,13 +1,15 @@
 
 import { Recipient } from '../../../src/models/recipient.model';
 import { AddressLinesExtractor } from '../../../src/services/document-recipients/address-lines-extractor';
+import { AddressRefiner } from '../../../src/services/document-recipients/address-refiner';
 import { MultipleRecipientsExtractor } from '../../../src/services/document-recipients/multiple-recipients-extractor';
 
 
 describe('MultipleRecipientsExtractor', () => {
 
     const addressLinesExtractor = new AddressLinesExtractor();
-    const recipientsExtractor = new MultipleRecipientsExtractor(addressLinesExtractor);
+    const addressRefiner = new AddressRefiner();
+    const recipientsExtractor = new MultipleRecipientsExtractor(addressLinesExtractor, addressRefiner);
 
     it('should properly extract single recipient', () => {
         const documentText = '"Warszawa, dnia 01.10.2019 roku\n\n\n\nSąd Apelacyjny w Warszawie\n\nVI Wydział Cywilny \n\npl. Krasińskich 2/4/6\n\n00-207 Warszawa\n\n\n\nPowodowie:\n\nJan Kowalski\n\nreprezentowani przez adw. Adam Kowalaskiego'
@@ -100,19 +102,19 @@ describe('MultipleRecipientsExtractor', () => {
             },
             {
                 address: [
-                    '1.Jan Topczewski',
+                    'Jan Topczewski',
                     'ul. Brzozowa 42,05-230 Przewalanka',
                 ],
             },
             {
                 address: [
-                    '2. Anna Topczewska',
+                    'Anna Topczewska',
                     'ul. Brzozowa 42,05-230 Przewalanka',
                 ],
             },
             {
                 address: [
-                    '3. Robert Topczewski',
+                    'Robert Topczewski',
                     'ul. Brzozowa 42,11-200 Przewalanka',
                 ],
             },
@@ -137,7 +139,7 @@ describe('MultipleRecipientsExtractor', () => {
             },
             {
                 address: [
-                    '1) Przewalanka Dom Sp. z o.o.',
+                    'Przewalanka Dom Sp. z o.o.',
                     'ul. Warszawska 14A, 05-230 Przewalanka',
                 ],
             },
@@ -154,7 +156,7 @@ describe('MultipleRecipientsExtractor', () => {
             },
             {
                 address: [
-                    '2| Przedsiębiorstwo Produkcyjno Testowe',
+                    'Przedsiębiorstwo Produkcyjno Testowe',
                     'KATARYNKI Sp. z o.o.',
                     'ul. K.Olszewskiego 8, 20-471 Grzędy'
                 ],

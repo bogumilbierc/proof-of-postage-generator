@@ -2,10 +2,13 @@ import * as log from 'electron-log';
 import { Recipient } from "../../models/recipient.model";
 import { AddressLineUtils } from './address-line-utils';
 import { AddressLinesExtractor } from './address-lines-extractor';
+import { AddressRefiner } from './address-refiner';
 
 export class MultipleRecipientsExtractor {
 
-    constructor(private readonly addressLinesExtractor: AddressLinesExtractor) {
+    constructor(
+        private readonly addressLinesExtractor: AddressLinesExtractor,
+        private readonly addressRefiner: AddressRefiner) {
 
     }
 
@@ -31,7 +34,9 @@ export class MultipleRecipientsExtractor {
         log.debug('MultipleRecipientsExtractor: Valid Recipients');
         log.debug(recipients);
 
-        return validRecipients;
+        const refinedRecipients = validRecipients.map((recipient: Recipient) => this.addressRefiner.refineRecipientAddress(recipient));
+
+        return refinedRecipients;
     }
 
     private splitAddressLinesIntoRecipients(addressLines: string[]): Recipient[] {

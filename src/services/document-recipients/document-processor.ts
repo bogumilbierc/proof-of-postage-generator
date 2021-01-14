@@ -3,6 +3,7 @@ import * as log from 'electron-log';
 import { ProcessDocumentsRequest } from '../../models/process-documents-request.model';
 import { ProcessedDocument } from '../../models/processed-document.model';
 import { AddressLinesExtractor } from './address-lines-extractor';
+import { AddressRefiner } from './address-refiner';
 import { MultipleRecipientsExtractor } from './multiple-recipients-extractor';
 import { RecipientExtractor } from './recipient-extractor';
 const mammoth = require('mammoth');
@@ -51,7 +52,7 @@ export class DocumentProcessor {
         try {
             const document = await mammoth.extractRawText({ path });
             const recipient = this.recipientExtractor.extractRecipient(document?.value);
-            const recipients = new MultipleRecipientsExtractor(new AddressLinesExtractor()).extractRecipients(document?.value);
+            const recipients = new MultipleRecipientsExtractor(new AddressLinesExtractor(), new AddressRefiner()).extractRecipients(document?.value);
 
             return {
                 path,
