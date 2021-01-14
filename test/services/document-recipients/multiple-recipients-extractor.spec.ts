@@ -10,7 +10,7 @@ describe('MultipleRecipientsExtractor', () => {
     const recipientsExtractor = new MultipleRecipientsExtractor(addressLinesExtractor);
 
     it('should properly extract single recipient', () => {
-        const documentText = '"Warszawa, dnia 01.10.2019 roku\n\n\n\nSąd Apelacyjny w Warszawie\n\nVI Wydział Cywilny \n\npl. Krasińskich 2/4/6\n\n00-207 Warszawa\n\n\n\nPowodowie:\n\Jan Kowalski\n\nreprezentowani przez adw. Adam Kowalaskiego'
+        const documentText = '"Warszawa, dnia 01.10.2019 roku\n\n\n\nSąd Apelacyjny w Warszawie\n\nVI Wydział Cywilny \n\npl. Krasińskich 2/4/6\n\n00-207 Warszawa\n\n\n\nPowodowie:\n\nJan Kowalski\n\nreprezentowani przez adw. Adam Kowalaskiego'
         const expected: Recipient[] = [
             {
                 address: [
