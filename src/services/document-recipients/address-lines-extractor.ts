@@ -27,6 +27,7 @@ export class AddressLinesExtractor {
     static readonly RECIPIENT_GROUP_CAPTION_REGEXES: RegExp[] = [
         /^Powód:\s*.?$/,
         /^Pozwan\w*:\s*.?$/,        
+        /^Powodowie\w*:\s*.?$/,
     ]
 
     extractLinesWithPotentialAddresses(documentText: string): string[] {
