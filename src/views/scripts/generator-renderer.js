@@ -1,6 +1,8 @@
 /*global $*/
 /* global ipcRenderer*/
 
+var processedDocuments = [];
+
 function renderGenerator() {
     console.log('rendering generator');
     const senders = ipcRenderer.sendSync('getListOfSenders');
@@ -43,18 +45,18 @@ function renderProcessingSummary(processedDocuments) {
                 `
                 <div class="row">
                 <div class="col-8">
-                    <textarea class="w-100" name="recipient-${recipientIndex}-address">${recipient.address.join('\n')}</textarea>
+                    <textarea class="w-100" oninput="onTextAreaInput('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-address')" data-filename="${document.fileName}" name="recipient-${recipientIndex}-address" id="recipient-${recipientIndex}-address">${recipient.address.join('\n')}</textarea>
                 </div>
                 <div class="col-2">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="recipient-${recipientIndex}-check" name="recipient-${recipientIndex}-priority">
+                        <input class="form-check-input" data-filename="${document.fileName}" data-recipientindex=${recipientIndex} type="checkbox" id="recipient-${recipientIndex}-check" name="recipient-${recipientIndex}-priority">
                         <label class="form-check-label" for="recipient-${recipientIndex}-check">
                         Priorytet
                         </label>
                     </div>
                 </div>
                 <div class="col-2">
-                    <button class="btn btn-danger">Usuń</button>
+                    <button class="btn btn-danger" onclick="onDeleteRecipientClick('${document.fileName}', ${recipientIndex})">Usuń</button>
                 </div>
             </form>`
             );
@@ -72,6 +74,26 @@ function renderProcessingSummary(processedDocuments) {
         this.style.height = this.scrollHeight + "px";
     });
 }
+
+function onTextAreaInput(fileName, recipientIndex, textAreaId) {
+    const textAreaValue = $(`#${textAreaId}`).val();
+    console.log(`Updating document ${fileName} for recipient: ${recipientIndex} with ${textAreaValue}`);
+    processedDocuments.forEach((document) => {
+        if (document.fileName === fileName) {
+            document.recipients[recipientIndex].address = textAreaValue.split('\n');
+        }
+    })
+}
+
+function onDeleteRecipientClick(fileName, recipientIndex) {
+    processedDocuments.forEach((document) => {
+        if (document.fileName === fileName) {
+            document.recipients.splice(recipientIndex, 1);
+        }
+    });
+    renderProcessingSummary(processedDocuments);
+}
+
 
 document.addEventListener('drop', (event) => {
     event.preventDefault();
@@ -97,7 +119,8 @@ document.addEventListener('drop', (event) => {
 ipcRenderer.on('processDocumentsResponse', (event, arg) => {
     console.log('Processing response from backend:');
     console.log(arg);
-    renderProcessingSummary(arg);
+    processedDocuments = arg;
+    renderProcessingSummary(processedDocuments);
 });
 
 
