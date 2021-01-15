@@ -131,6 +131,7 @@ function onDeleteRecipientClick(fileName, recipientIndex) {
 }
 
 function onGenerateConfirmationClick(fileName) {
+    $('#loading-modal').modal('show');
     const request = {
         documents: processedDocuments.filter((document) => document.fileName === fileName),
         sender: $('#generator-sender-select').val()
@@ -168,6 +169,7 @@ ipcRenderer.on('processDocumentsResponse', (event, arg) => {
 });
 
 ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
+    $('#loading-modal').modal('hide');
     console.log('Generation response from backend:');
     console.log(processedDocuments);
 
