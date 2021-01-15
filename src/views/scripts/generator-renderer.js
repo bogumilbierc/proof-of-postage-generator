@@ -13,6 +13,7 @@
 /**
  * @typedef {object} Recipient
  * @property {string[]} address
+ * @property {boolean} [priorityShipment]
  */
 
 /**
@@ -74,7 +75,7 @@ function renderProcessingSummary(processedDocuments) {
                 </div>
                 <div class="col-2">
                     <div class="form-check">
-                        <input class="form-check-input" data-filename="${document.fileName}" data-recipientindex=${recipientIndex} type="checkbox" id="recipient-${recipientIndex}-check" name="recipient-${recipientIndex}-priority">
+                        <input class="form-check-input" onchange="onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-priority-shipment-check')" data-filename="${document.fileName}" data-recipientindex=${recipientIndex} type="checkbox" id="recipient-${recipientIndex}-priority-shipment-check" name="recipient-${recipientIndex}-priority">
                         <label class="form-check-label" for="recipient-${recipientIndex}-check">
                         Priorytet
                         </label>
@@ -106,6 +107,16 @@ function onTextAreaInput(fileName, recipientIndex, textAreaId) {
     processedDocuments.forEach((document) => {
         if (document.fileName === fileName) {
             document.recipients[recipientIndex].address = textAreaValue.split('\n');
+        }
+    })
+}
+
+function onPriorityShipmentCheckboxChange(fileName, recipientIndex, checkboxId) {
+    const isPriorityShipmentSelected = !!$(`#${checkboxId}`).prop('checked');
+    console.log(`Updating document ${fileName} for recipient: ${recipientIndex} with priority shipment ${isPriorityShipmentSelected}`);
+    processedDocuments.forEach((document) => {
+        if (document.fileName === fileName) {
+            document.recipients[recipientIndex].priorityShipment = isPriorityShipmentSelected;
         }
     })
 }

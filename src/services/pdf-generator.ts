@@ -32,6 +32,9 @@ export class PdfGenerator {
         for (let i = 0; i < recipients.length; i++) {
             bodyFormData.append(`data[${i + 1}][nadawca]`, sender.address.join('\n'));
             bodyFormData.append(`data[${i + 1}][odbiorca]`, recipients[i].address.join('\n'));
+            if(recipients[i].priorityShipment){
+            bodyFormData.append(`data[${i + 1}][priorytet]`, 'on');
+            }
         }
 
         log.info(`PdfGenerator: Starting async call`);
