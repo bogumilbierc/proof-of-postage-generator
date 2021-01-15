@@ -26,10 +26,11 @@ export class ProofOfPostageService {
         log.debug(`ProofOfPostageService: Documents processed: ${JSON.stringify(processedDocuments)}`);
 
         for (const document of processedDocuments) {
+            document.fileName = path.parse(document.path).name;
             if (document.success) {
-                const confirmationPath = this.getConfirmationFilePath(document)
+                const confirmationPath = this.getConfirmationFilePath(document.fileName)
                 document.confirmationLocation = confirmationPath;
-                document.pdfGenerated = await this.pdfGenerator.safelyGenerateFile(sender, document.recipient, confirmationPath);
+                document.pdfGenerated = await this.pdfGenerator.safelyGenerateFile(sender, document.recipients, confirmationPath);
             } else {
                 document.pdfGenerated = false;
             }
@@ -38,8 +39,7 @@ export class ProofOfPostageService {
         return processedDocuments;
     }
 
-    private getConfirmationFilePath(document: ProcessedDocument): string {
-        const filename = path.parse(document.path).name;
+    private getConfirmationFilePath(filename: string): string {
         return path.join(
             this.getConfirmationsFolderLocation(),
             `${filename}_potwierdzenie.pdf`

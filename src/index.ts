@@ -1,8 +1,10 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as log from 'electron-log';
 import * as path from 'path';
+import { AddressLinesExtractor } from './services/document-recipients/address-lines-extractor';
+import { AddressRefiner } from './services/document-recipients/address-refiner';
 import { DocumentProcessor } from './services/document-recipients/document-processor';
-import { RecipientExtractor } from './services/document-recipients/recipient-extractor';
+import { MultipleRecipientsExtractor } from './services/document-recipients/multiple-recipients-extractor';
 import { PdfGenerator } from './services/pdf-generator';
 import { PreferencesService } from './services/preferences-service';
 import { ProofOfPostageService } from './services/proof-of-postage-service';
@@ -59,7 +61,9 @@ app.on('activate', () => {
 
 const preferencesService = new PreferencesService(app);
 const senderStore = new SenderStore(preferencesService);
-const recipientExtractor = new RecipientExtractor();
+const addressLinesExtractor = new AddressLinesExtractor();
+const addressRefiner = new AddressRefiner();
+const recipientExtractor = new MultipleRecipientsExtractor(addressLinesExtractor, addressRefiner);
 const documentProcessor = new DocumentProcessor(recipientExtractor);
 const pdfGenerator = new PdfGenerator();
 const proofOfPostageService = new ProofOfPostageService(documentProcessor, pdfGenerator, senderStore, preferencesService);

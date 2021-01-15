@@ -2,10 +2,7 @@ import { dialog } from 'electron';
 import * as log from 'electron-log';
 import { ProcessDocumentsRequest } from '../../models/process-documents-request.model';
 import { ProcessedDocument } from '../../models/processed-document.model';
-import { AddressLinesExtractor } from './address-lines-extractor';
-import { AddressRefiner } from './address-refiner';
 import { MultipleRecipientsExtractor } from './multiple-recipients-extractor';
-import { RecipientExtractor } from './recipient-extractor';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mammoth = require('mammoth');
 
@@ -13,7 +10,7 @@ export class DocumentProcessor {
 
     static readonly SUPPORTED_EXTENSIONS = ['doc', 'docx', 'odt'];
 
-    constructor(private readonly recipientExtractor: RecipientExtractor) { }
+    constructor(private readonly multipleRecipientsExtractor: MultipleRecipientsExtractor) { }
 
     async processRequest(request: ProcessDocumentsRequest): Promise<ProcessedDocument[]> {
         const fileNames = request.paths || this.promptForPaths();
@@ -52,14 +49,12 @@ export class DocumentProcessor {
         }
         try {
             const document = await mammoth.extractRawText({ path });
-            const recipient = this.recipientExtractor.extractRecipient(document?.value);
-            const recipients = new MultipleRecipientsExtractor(new AddressLinesExtractor(), new AddressRefiner()).extractRecipients(document?.value);
+            const recipients = this.multipleRecipientsExtractor.extractRecipients(document?.value);
 
             return {
                 path,
-                recipient,
                 recipients,
-                success: recipient?.length > 0
+                success: recipients?.length > 0
             }
         } catch (e) {
             log.error(`Error while processing at path: ${path}`);

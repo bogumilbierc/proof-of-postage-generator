@@ -25,7 +25,7 @@ function renderRecipients(document) {
     }
     return document.recipients
         .map((recipient) => {
-            return `<div class="form-group"><textarea class="form-control" rows=">${recipient.address.length}">${recipient.address.join('\n')}</textarea></div>`
+            return `<div class="form-group"><textarea class="form-control" rows=">${recipient.address.length + 1}">${recipient.address.join('\n')}</textarea></div>`
         })
         .join('<br/>');
 }
@@ -37,13 +37,17 @@ function renderProcessingSummary(processedDocuments) {
     processedDocuments.forEach((document) => {
         $('#generator-summary').append(
             `<tr>
-                <td>${document.path}</td>
+                <td>${document.fileName}</td>
                 <td>${document.pdfGenerated}</td>
                 <td>${document.recipients.length}</td>
                 <td>${renderRecipients(document)}</td>
                 <td>${document.pdfGenerated ? document.confirmationLocation : ''}</td>
             </tr>`
         );
+    });
+    $('textarea').each(function(){
+        this.style.height = "";
+        this.style.height = this.scrollHeight + "px";
     });
 }
 

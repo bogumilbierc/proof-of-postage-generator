@@ -1,29 +1,34 @@
 import axios from "axios";
 import * as log from 'electron-log';
 import { promises as fs } from 'fs';
+import { Recipient } from "../models/recipient.model";
 import { Sender } from "./sender-store";
 
 export class PdfGenerator {
 
-    async safelyGenerateFile(sender: Sender, recipient: string[], saveLocation?: string): Promise<boolean> {
+    async safelyGenerateFile(sender: Sender, recipients: Recipient[], saveLocation?: string): Promise<boolean> {
 
         if (!this.isPdfGenerationEnabled()) {
+            log.debug('PDF generation disabled');
             return Promise.resolve(false);
         }
 
-        return this.generate(sender, recipient, saveLocation)
+        return this.generate(sender, recipients, saveLocation)
             .catch((e) => {
                 log.error('Error while trying to generate PDF', e);
                 return false;
             });
     }
 
-    private async generate(sender: Sender, recipient: string[], saveLocation?: string): Promise<boolean> {
-        log.debug(`PdfGenerator: Will try to generate PDF for Sender: ${JSON.stringify(sender)} and recipient: ${JSON.stringify(recipient)}`);
+    private async generate(sender: Sender, recipients: Recipient[], saveLocation?: string): Promise<boolean> {
+        log.debug(`PdfGenerator: Will try to generate PDF for Sender: ${JSON.stringify(sender)} and recipient: ${JSON.stringify(recipients)}`);
 
         const bodyFormData = new URLSearchParams();
-        bodyFormData.append('data[1][nadawca]', sender.address.join('\n'));
-        bodyFormData.append('data[1][odbiorca]', recipient.join('\n'));
+
+        for (let i = 0; i < recipients.length; i++) {
+            bodyFormData.append(`data[${i + 1}][nadawca]`, sender.address.join('\n'));
+            bodyFormData.append(`data[${i + 1}][odbiorca]`, recipients[i].address.join('\n'));
+        }
 
         log.info(`PdfGenerator: Starting async call`);
 
@@ -48,6 +53,10 @@ export class PdfGenerator {
     }
 
     private isPdfGenerationEnabled(): boolean {
-        return !!process.env['SKIP_PDF']; // add some configuration mechanism
+        const skipPdf = process.env.SKIP_PDF;
+        if (skipPdf === 'true') {
+            return false;
+        }
+        return true;
     }
 }
