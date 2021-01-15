@@ -25,12 +25,15 @@ Po uruchomieniu aplikacji pokażę się puste okno generatora:
 W górnej części okna znajduje sie dropdown z listą zdefiniowanych nadawców. Należy wybrać nadawcę, którego chcemy użyć na wygenerowanych potwierdzeniach.
 
 Środkowa częśc okna to miejsce do ładowania dokumentów - można je załadować klikając guzik, lub po prostu przeciągając dokumenty na okno aplikacji.
-Przetwarzanie zostanie uruchomione automatycznie po załadowaniu plików
+Ekstrakcja odbiorców rozpocznie się automatycznie.
 
-Po zakończeniu przetwarzania będzie widoczny jego status w dolnej części ekranu:
-![Okno generatora z podsumowaniem](/docs/generator-status.png)
+Po zakończeniu ekstrakcji odbiorców będzie widoczna lista adresatów z możliwością jej edycji.
+![Okno generatora z odbiorcami](/docs/generator-recipients.png)
 
-Na podsumowaniu status widoczne jest miejsce, gdzie zapisało się potwierdzenie.
+Po zakończeniu edycji należy wcisnąć guzik "Generuj potwierdzenie" aby wygenerować PDF. W czasie generacji będzie wyświetlony ekran ładowania
+![Okno generatora z ekranem ładowania](/docs/generator-processing.png)
+
+Po zakończeniu generowania potwierdzenia jego status będzie wyświetlony obok przycisku generacji.
 
 Lokalizacja potwierdzeń konfigurowana jest w *Preferencjach*. W tak zdefiniowanym folderze tworzony jest folder z obecną datą, gdzie zapisywany jest PDF.
 
