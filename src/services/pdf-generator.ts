@@ -7,6 +7,16 @@ import { Sender } from "./sender-store";
 export class PdfGenerator {
 
     async safelyGenerateFile(sender: Sender, recipients: Recipient[], saveLocation?: string): Promise<boolean> {
+        const result = await this.generateOrCatch(sender, recipients, saveLocation);
+        if (result) {
+            log.debug('PDF generation call OK, returning');
+            return result;
+        }
+        log.debug('PDF generation call failed, retrying');
+        return await this.generateOrCatch(sender, recipients, saveLocation);
+    }
+
+    private async generateOrCatch(sender: Sender, recipients: Recipient[], saveLocation?: string): Promise<boolean> {
         return this.generate(sender, recipients, saveLocation)
             .catch((e) => {
                 log.error('Error while trying to generate PDF', e);
