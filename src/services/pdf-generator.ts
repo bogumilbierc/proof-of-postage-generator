@@ -7,12 +7,6 @@ import { Sender } from "./sender-store";
 export class PdfGenerator {
 
     async safelyGenerateFile(sender: Sender, recipients: Recipient[], saveLocation?: string): Promise<boolean> {
-
-        if (!this.isPdfGenerationEnabled()) {
-            log.debug('PDF generation disabled');
-            return Promise.resolve(false);
-        }
-
         return this.generate(sender, recipients, saveLocation)
             .catch((e) => {
                 log.error('Error while trying to generate PDF', e);
@@ -49,14 +43,6 @@ export class PdfGenerator {
             log.info(`PdfGenerator: Saved PDF file under: ${saveLocation}`);
         }
 
-        return true;
-    }
-
-    private isPdfGenerationEnabled(): boolean {
-        const skipPdf = process.env.SKIP_PDF;
-        if (skipPdf === 'true') {
-            return false;
-        }
         return true;
     }
 }

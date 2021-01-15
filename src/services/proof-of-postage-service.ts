@@ -1,8 +1,7 @@
 import * as log from 'electron-log';
 import * as path from 'path';
-import { ProcessDocumentsRequest } from "../models/process-documents-request.model";
+import { GenerateConfirmationsRequest } from '../models/generate-confirmations-request.model';
 import { ProcessedDocument } from "../models/processed-document.model";
-import { DocumentProcessor } from "./document-recipients/document-processor";
 import { PdfGenerator } from "./pdf-generator";
 import { PreferencesService } from './preferences-service';
 import { SenderStore } from "./sender-store";
@@ -11,27 +10,27 @@ import fs = require('fs');
 export class ProofOfPostageService {
 
     constructor(
-        private readonly documentProcessor: DocumentProcessor,
         private readonly pdfGenerator: PdfGenerator,
         private readonly sendersStore: SenderStore,
         private readonly preferencesService: PreferencesService) {
 
     }
 
-    async processRequest(request: ProcessDocumentsRequest): Promise<ProcessedDocument[]> {
+    async processRequest(request: GenerateConfirmationsRequest): Promise<ProcessedDocument[]> {
         log.debug(`ProofOfPostageService: Processing request: ${JSON.stringify(request)}`);
         const sender = this.sendersStore.getSender(request.sender);
         log.debug(`ProofOfPostageService: Got sender details: ${JSON.stringify(sender)}`);
-        const processedDocuments: ProcessedDocument[] = await this.documentProcessor.processRequest(request);
-        log.debug(`ProofOfPostageService: Documents processed: ${JSON.stringify(processedDocuments)}`);
+
+        const processedDocuments = request.documents;
 
         for (const document of processedDocuments) {
             document.fileName = path.parse(document.path).name;
-            if (document.success) {
+            if (document?.recipients?.length) {
                 const confirmationPath = this.getConfirmationFilePath(document.fileName)
                 document.confirmationLocation = confirmationPath;
                 document.pdfGenerated = await this.pdfGenerator.safelyGenerateFile(sender, document.recipients, confirmationPath);
             } else {
+                log.debug(`Document: ${document.fileName} does not have recipients, skipping it`);
                 document.pdfGenerated = false;
             }
         }

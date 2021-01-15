@@ -76,11 +76,6 @@ yarn
 yarn start
 ```
 
-### Odpalenie aplikacji bez funkcjonalności generowania PDF
-```
-yarn start-no-pdf
-```
-
 ### Odpalenie testów
 ```
 yarn test

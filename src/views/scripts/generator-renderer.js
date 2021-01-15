@@ -1,7 +1,24 @@
 /*global $*/
 /* global ipcRenderer*/
 
-var processedDocuments = [];
+/** 
+ * @typedef {object} ProcessedDocument 
+ * @property {string} path
+ * @property {string} fileName
+ * @property {string} [message]
+ * @property {boolean} success
+ * @property {Recipient[]} recipients
+*/
+
+/**
+ * @typedef {object} Recipient
+ * @property {string[]} address
+ */
+
+/**
+ * @type {ProcessedDocument[]}
+ */
+let processedDocuments = [];
 
 function renderGenerator() {
     console.log('rendering generator');
@@ -21,6 +38,10 @@ function onProcessSingleFileClick() {
     ipcRenderer.send('processDocuments', processRequest);
 }
 
+/**
+ * 
+ * @param {ProcessedDocument} document 
+ */
 function renderRecipients(document) {
     if (!document.recipients) {
         return '';
@@ -32,6 +53,10 @@ function renderRecipients(document) {
         .join('<br/>');
 }
 
+/**
+ * 
+ * @param {ProcessedDocument[]} processedDocuments 
+ */
 function renderProcessingSummary(processedDocuments) {
     $('#generator-summary').show();
     $('#generator-summary').empty();
@@ -62,9 +87,9 @@ function renderProcessingSummary(processedDocuments) {
             );
         })
         $('#generator-summary').append(`
-            <div class="row">
+            <div class="row" data-filename="'${document.fileName}'">
                 <div class="col text-center">
-                    <button class="btn btn-success">Generuj potwierdzenie</button>
+                    <button class="btn btn-success" onclick="onGenerateConfirmationClick('${document.fileName}')">Generuj potwierdzenie</button>
                 </div>
             </div>
             `);
@@ -94,6 +119,14 @@ function onDeleteRecipientClick(fileName, recipientIndex) {
     renderProcessingSummary(processedDocuments);
 }
 
+function onGenerateConfirmationClick(fileName) {
+    const request = {
+        documents: processedDocuments.filter((document) => document.fileName === fileName),
+        sender: $('#generator-sender-select').val()
+    }
+    ipcRenderer.send('generateConfirmations', request);
+}
+
 
 document.addEventListener('drop', (event) => {
     event.preventDefault();
@@ -121,6 +154,33 @@ ipcRenderer.on('processDocumentsResponse', (event, arg) => {
     console.log(arg);
     processedDocuments = arg;
     renderProcessingSummary(processedDocuments);
+});
+
+ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
+    console.log('Generation response from backend:');
+    console.log(processedDocuments);
+
+    processedDocuments.forEach((document) => {
+        let statusText = '';
+        if (document.pdfGenerated) {
+            statusText =
+                `
+                    <div class="col">
+                        <p><b>Sukces:</b> TAK</p>
+                        <p><b>Potwierdzenie:</b> ${document.confirmationLocation}</p>
+                    </div>
+            `
+        } else {
+            statusText =
+                `
+                <div class="col">
+                    <p><b>Sukces:</b> NIE</p>
+                    <p><b>Błąd:</b> ${document.message}</p>
+                </div>
+        `
+        }
+        $(`div[data-filename~="'${document.fileName}'"`).append(statusText)
+    })
 });
 
 

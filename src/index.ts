@@ -66,7 +66,7 @@ const addressRefiner = new AddressRefiner();
 const recipientExtractor = new MultipleRecipientsExtractor(addressLinesExtractor, addressRefiner);
 const documentProcessor = new DocumentProcessor(recipientExtractor);
 const pdfGenerator = new PdfGenerator();
-const proofOfPostageService = new ProofOfPostageService(documentProcessor, pdfGenerator, senderStore, preferencesService);
+const proofOfPostageService = new ProofOfPostageService(pdfGenerator, senderStore, preferencesService);
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
@@ -74,7 +74,12 @@ const proofOfPostageService = new ProofOfPostageService(documentProcessor, pdfGe
 // register events
 ipcMain.on('processDocuments', async (event, arg) => {
   log.debug(`Got request to process: ${JSON.stringify(arg)}`);
-  event.reply('processDocumentsResponse', await documentProcessor.processRequest(arg))
+  event.reply('processDocumentsResponse', await documentProcessor.processRequest(arg));
+});
+
+ipcMain.on('generateConfirmations', async (event, arg) => {
+  log.debug(`Got request to process: ${JSON.stringify(arg)}`);
+  event.reply('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg));
 });
 
 /**
