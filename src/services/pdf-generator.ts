@@ -13,6 +13,11 @@ export class PdfGenerator {
             return result;
         }
         log.debug('PDF generation call failed, retrying');
+        const result2 = await this.generateOrCatch(sender, recipients, saveLocation);
+        if (result2) {
+            log.debug('Second PDF generation call OK, returning');
+            return result2;
+        }
         return await this.generateOrCatch(sender, recipients, saveLocation);
     }
 
@@ -32,8 +37,8 @@ export class PdfGenerator {
         for (let i = 0; i < recipients.length; i++) {
             bodyFormData.append(`data[${i + 1}][nadawca]`, sender.address.join('\n'));
             bodyFormData.append(`data[${i + 1}][odbiorca]`, recipients[i].address.join('\n'));
-            if(recipients[i].priorityShipment){
-            bodyFormData.append(`data[${i + 1}][priorytet]`, 'on');
+            if (recipients[i].priorityShipment) {
+                bodyFormData.append(`data[${i + 1}][priorytet]`, 'on');
             }
         }
 
@@ -45,7 +50,7 @@ export class PdfGenerator {
             data: bodyFormData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             responseType: 'arraybuffer',
-            timeout: 10000
+            timeout: 15000
         });
 
         log.info(`PdfGenerator: File generation response status: ${response.status}`);
