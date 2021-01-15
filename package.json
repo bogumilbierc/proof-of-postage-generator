@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "tsc && electron-forge start",
-    "start-no-pdf": "SKIP_PDF=true tsc && electron-forge start",
+    "start-no-pdf": "tsc && SKIP_PDF=true electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",

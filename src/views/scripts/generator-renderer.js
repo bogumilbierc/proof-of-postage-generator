@@ -24,28 +24,50 @@ function renderRecipients(document) {
         return '';
     }
     return document.recipients
-        .map((recipient) => {
-            return `<div class="form-group"><textarea class="form-control" rows=">${recipient.address.length + 1}">${recipient.address.join('\n')}</textarea></div>`
+        .map((recipient, index) => {
+            return `<div class="form-group"><textarea id="recipient-${index} class="form-control" rows=">${recipient.address.length + 1}">${recipient.address.join('\n')}</textarea></div>`
         })
         .join('<br/>');
 }
 
 function renderProcessingSummary(processedDocuments) {
-    $('#generator-summary-wrapper').show();
+    $('#generator-summary').show();
     $('#generator-summary').empty();
 
     processedDocuments.forEach((document) => {
-        $('#generator-summary').append(
-            `<tr>
-                <td>${document.fileName}</td>
-                <td>${document.pdfGenerated}</td>
-                <td>${document.recipients.length}</td>
-                <td>${renderRecipients(document)}</td>
-                <td>${document.pdfGenerated ? document.confirmationLocation : ''}</td>
-            </tr>`
-        );
+
+        $('#generator-summary').append(`<h3 class="text-center">${document.fileName}</h3>`);
+        document.recipients.forEach((recipient, recipientIndex) => {
+            $('#generator-summary').append(
+
+                `
+                <div class="row">
+                <div class="col-8">
+                    <textarea class="w-100" name="recipient-${recipientIndex}-address">${recipient.address.join('\n')}</textarea>
+                </div>
+                <div class="col-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="recipient-${recipientIndex}-check" name="recipient-${recipientIndex}-priority">
+                        <label class="form-check-label" for="recipient-${recipientIndex}-check">
+                        Priorytet
+                        </label>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-danger">Usuń</button>
+                </div>
+            </form>`
+            );
+        })
+        $('#generator-summary').append(`
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-success">Generuj potwierdzenie</button>
+                </div>
+            </div>
+            `);
     });
-    $('textarea').each(function(){
+    $('textarea').each(function () {
         this.style.height = "";
         this.style.height = this.scrollHeight + "px";
     });

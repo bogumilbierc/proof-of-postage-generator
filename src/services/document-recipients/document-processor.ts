@@ -1,8 +1,10 @@
 import { dialog } from 'electron';
 import * as log from 'electron-log';
+import * as path from 'path';
 import { ProcessDocumentsRequest } from '../../models/process-documents-request.model';
 import { ProcessedDocument } from '../../models/processed-document.model';
 import { MultipleRecipientsExtractor } from './multiple-recipients-extractor';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mammoth = require('mammoth');
 
@@ -36,31 +38,34 @@ export class DocumentProcessor {
         });
     }
 
-    private async processSingleDocument(path: string): Promise<ProcessedDocument> {
-        log.debug(`Will try to process document at path: ${path}`);
-
-        if (!this.isDocumentTypeSupported(path)) {
-            log.error(`Unsupported extension at path: ${path}`);
+    private async processSingleDocument(documentPath: string): Promise<ProcessedDocument> {
+        log.debug(`Will try to process document at path: ${documentPath}`);
+        const fileName = path.parse(documentPath).name;
+        if (!this.isDocumentTypeSupported(documentPath)) {
+            log.error(`Unsupported extension at path: ${documentPath}`);
             return Promise.resolve({
-                path,
+                path: documentPath,
                 success: false,
                 message: `FileType unsupported. Supported file types are: ${JSON.stringify(DocumentProcessor.SUPPORTED_EXTENSIONS)}`
             })
         }
+
         try {
-            const document = await mammoth.extractRawText({ path });
+            const document = await mammoth.extractRawText({ path: documentPath });
             const recipients = this.multipleRecipientsExtractor.extractRecipients(document?.value);
 
             return {
-                path,
+                fileName,
+                path: documentPath,
                 recipients,
                 success: recipients?.length > 0
             }
         } catch (e) {
-            log.error(`Error while processing at path: ${path}`);
+            log.error(`Error while processing at path: ${documentPath}`);
             log.error(e);
             return {
-                path,
+                fileName,
+                path: documentPath,
                 success: false,
                 message: e?.message
             }

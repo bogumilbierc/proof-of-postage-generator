@@ -74,7 +74,7 @@ const proofOfPostageService = new ProofOfPostageService(documentProcessor, pdfGe
 // register events
 ipcMain.on('processDocuments', async (event, arg) => {
   log.debug(`Got request to process: ${JSON.stringify(arg)}`);
-  event.reply('processDocumentsResponse', await proofOfPostageService.processRequest(arg))
+  event.reply('processDocumentsResponse', await documentProcessor.processRequest(arg))
 });
 
 /**
