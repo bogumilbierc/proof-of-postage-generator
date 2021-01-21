@@ -16,7 +16,12 @@ export class PreferencesService {
         }
 
         const rawFile = fs.readFileSync(this.getPreferencesFileLocation());
-        return JSON.parse(rawFile.toString());
+        const parsedPreference: UserPreferences = JSON.parse(rawFile.toString());
+        return {
+            confirmationsLocation: parsedPreference.confirmationsLocation || this.getDefaultPreferences().confirmationsLocation,
+            sendersStoreLocation: parsedPreference.sendersStoreLocation || this.getDefaultPreferences().sendersStoreLocation,
+            recipientsStoreLocation: parsedPreference.recipientsStoreLocation || this.getDefaultPreferences().recipientsStoreLocation,
+        }
     }
 
     changeSendersFileLocation(): void {
@@ -36,6 +41,26 @@ export class PreferencesService {
         this.storeUserPreferences({
             ...preferences,
             sendersStoreLocation: path
+        });
+    }
+
+    changeRecipientsFileLocation(): void {
+        const preferences = this.getUserPreferences();
+        const path = dialog.showSaveDialogSync({
+            defaultPath: this.getUserPreferences().recipientsStoreLocation,
+            filters: [
+                {
+                    name: 'JSON',
+                    extensions: ['json']
+                }
+            ]
+        })
+        if (!path) {
+            return;
+        }
+        this.storeUserPreferences({
+            ...preferences,
+            recipientsStoreLocation: path
         });
     }
 
@@ -67,7 +92,11 @@ export class PreferencesService {
             confirmationsLocation: path.join(
                 this.app.getPath('appData'),
                 'confirmations-pdf'
-            )
+            ),
+            recipientsStoreLocation: path.join(
+                this.app.getPath('appData'),
+                'confirmation-generator-recipients.json'
+            ),
         }
     }
 
@@ -83,4 +112,5 @@ export class PreferencesService {
 export interface UserPreferences {
     sendersStoreLocation: string;
     confirmationsLocation: string;
+    recipientsStoreLocation: string;
 }

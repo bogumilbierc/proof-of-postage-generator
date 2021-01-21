@@ -112,10 +112,14 @@ ipcMain.on('savePreferences', (event, arg) => {
   event.returnValue = preferencesService.storeUserPreferences(arg);
 });
 
-ipcMain.on('changeSenderFileLocation', (event,) => {
+ipcMain.on('changeSendersFileLocation', (event,) => {
   event.returnValue = preferencesService.changeSendersFileLocation();
 });
 
 ipcMain.on('changeConfirmationsLocation', (event,) => {
   event.returnValue = preferencesService.changeConfirmationsLocation();
 })
+
+ipcMain.on('changeRecipientsFileLocation', (event,) => {
+  event.returnValue = preferencesService.changeRecipientsFileLocation();
+});
