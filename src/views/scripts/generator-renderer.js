@@ -66,23 +66,28 @@ function renderProcessingSummary(processedDocuments) {
 
         $('#generator-summary').append(`<h3 class="text-center">${document.fileName}</h3>`);
         document.recipients.forEach((recipient, recipientIndex) => {
+
+            const dataTags = `data-filename="${document.fileName}" data-recipientindex="${recipientIndex}"`;
+            const priorityShipmentCheckboxId = `recipient-${recipientIndex}-priority-shipment-check`;
+            const saveRecipientCheckboxId = `recipient-${recipientIndex}-save-recipient-check`;
+
             $('#generator-summary').append(
 
                 `
                 <div class="row">
                 <div class="col-8">
-                    <textarea class="w-100" oninput="onTextAreaInput('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-address')" data-filename="${document.fileName}" name="recipient-${recipientIndex}-address" id="recipient-${recipientIndex}-address">${recipient.address.join('\n')}</textarea>
+                    <textarea class="w-100" oninput="onTextAreaInput('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-address')" ${dataTags} name="recipient-${recipientIndex}-address" id="recipient-${recipientIndex}-address">${recipient.address.join('\n')}</textarea>
                 </div>
                 <div class="col-2">
                     <div class="form-check">
-                        <input class="form-check-input" onchange="onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-priority-shipment-check')" data-filename="${document.fileName}" data-recipientindex=${recipientIndex} type="checkbox" id="recipient-${recipientIndex}-priority-shipment-check" name="recipient-${recipientIndex}-priority">
-                        <label class="form-check-label" for="recipient-${recipientIndex}-priority-shipment-check">
+                        <input class="form-check-input" onchange="onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, '${priorityShipmentCheckboxId}')" ${dataTags} type="checkbox" id="${priorityShipmentCheckboxId}" name="recipient-${recipientIndex}-priority">
+                        <label class="form-check-label" for="${priorityShipmentCheckboxId}">
                         Priorytet
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" onchange="onSaveRecipientCheckboxChange('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-save-recipient-check')" data-filename="${document.fileName}" data-recipientindex=${recipientIndex} type="checkbox" id="recipient-${recipientIndex}-save-recipient-check" name="recipient-${recipientIndex}-save-recipient">
-                        <label class="form-check-label" for="recipient-${recipientIndex}-save-recipient-check">
+                        <input class="form-check-input" onchange="onSaveRecipientCheckboxChange('${document.fileName}', ${recipientIndex}, '${saveRecipientCheckboxId}')" ${dataTags} type="checkbox" id="${saveRecipientCheckboxId}" name="recipient-${recipientIndex}-save-recipient">
+                        <label class="form-check-label" for="${saveRecipientCheckboxId}">
                         Zapisz
                         </label>
                     </div>
