@@ -76,8 +76,14 @@ function renderProcessingSummary(processedDocuments) {
                 <div class="col-2">
                     <div class="form-check">
                         <input class="form-check-input" onchange="onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-priority-shipment-check')" data-filename="${document.fileName}" data-recipientindex=${recipientIndex} type="checkbox" id="recipient-${recipientIndex}-priority-shipment-check" name="recipient-${recipientIndex}-priority">
-                        <label class="form-check-label" for="recipient-${recipientIndex}-check">
+                        <label class="form-check-label" for="recipient-${recipientIndex}-priority-shipment-check">
                         Priorytet
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" onchange="onSaveRecipientCheckboxChange('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-save-recipient-check')" data-filename="${document.fileName}" data-recipientindex=${recipientIndex} type="checkbox" id="recipient-${recipientIndex}-save-recipient-check" name="recipient-${recipientIndex}-save-recipient">
+                        <label class="form-check-label" for="recipient-${recipientIndex}-save-recipient-check">
+                        Zapisz
                         </label>
                     </div>
                 </div>
@@ -89,6 +95,9 @@ function renderProcessingSummary(processedDocuments) {
         })
         $('#generator-summary').append(`
             <div class="row" data-filename="'${document.fileName}'">
+                <div class="col text-center">
+                    <button class="btn btn-success" onclick="onGeneratorSaveRecipientsClick('${document.fileName}')">Zapisz odbiorców</button>
+                </div>
                 <div class="col text-center">
                     <button class="btn btn-success" onclick="onGenerateConfirmationClick('${document.fileName}')">Generuj potwierdzenie</button>
                 </div>
@@ -139,6 +148,15 @@ function onGenerateConfirmationClick(fileName) {
     ipcRenderer.send('generateConfirmations', request);
 }
 
+function onSaveRecipientCheckboxChange(fileName, recipientIndex, checkboxId) {
+    const isSaveCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
+    console.log(`Document ${fileName} for recipient: ${recipientIndex} save ${isSaveCheckboxSelected}`);
+}
+
+
+function onGeneratorSaveRecipientsClick(fileName) {
+    console.log(`This should save recipients for filename: ${fileName}`);
+}
 
 document.addEventListener('drop', (event) => {
     event.preventDefault();

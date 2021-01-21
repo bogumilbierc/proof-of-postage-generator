@@ -32,6 +32,9 @@
             <a class="nav-link" id="sender-nav-link" href="#" onclick="navigateToPage('senders')">Nadawcy</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" id="recipient-nav-link" href="#" onclick="navigateToPage('recipients')">Odbiorcy</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" id="preferences-nav-link" href="#"
               onclick="navigateToPage('preferences')">Preferencje</a>
           </li>
@@ -87,6 +90,35 @@
         </tr>
       </thead>
       <tbody id="sender-table-body">
+      </tbody>
+
+    </table>
+  </div>
+
+  <div id="recipients-page" class="container-fluid">
+    <h2>Dodaj odbiorcę</h2>
+    <div class="mb-3">
+      <label for="add-recipient-name" class="form-label">Nazwa</label>
+      <input type="email" class="form-control" id="add-recipient-name">
+    </div>
+    <div class="mb-3">
+      <label for="add-recipient-address" class="form-label">Adres</label>
+      <textarea class="form-control" id="add-recipient-address" rows="6"></textarea>
+    </div>
+    <button class="btn btn-success" onclick="onSaveRecipientClick()">Zapisz</button>
+    <span class="mt-2"></span>
+
+    <h2>Obecni odbiorcy</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <td>Nazwa</td>
+          <td>Adres</td>
+          <td>Domyślny</td>
+          <td>Akcje</td>
+        </tr>
+      </thead>
+      <tbody id="recipients-table-body">
       </tbody>
 
     </table>
