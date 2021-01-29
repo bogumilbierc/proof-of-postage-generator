@@ -1,16 +1,18 @@
 /*global $*/
 /* global ipcRenderer*/
 
+const Senders = {};
+
 function renderSenders() {
     const senders = ipcRenderer.sendSync('getListOfSenders');
 
     $("#sender-table-body").empty()
     senders.forEach(sender => {
-        $("#sender-table-body").append(buildSenderRow(sender));
+        $("#sender-table-body").append(Senders.buildSenderRow(sender));
     });
 }
 
-function onSaveSenderClick() {
+Senders.onSaveSenderClick = function () {
     const sender = {
         name: $("#add-sender-name").val(),
         address: $("#add-sender-address").val().split('\n')
@@ -29,32 +31,19 @@ function onSaveSenderClick() {
     renderSenders();
 }
 
-function onDeleteSenderClick(senderName) {
+Senders.onDeleteSenderClick = function (senderName) {
     console.log(`Sending request to delete sender: ${senderName}`);
     ipcRenderer.sendSync('deleteSender', senderName);
     renderSenders();
 }
 
-function onSetSenderAsDefaultClick(senderName) {
+Senders.onSetSenderAsDefaultClick = function (senderName) {
     console.log(`Sending request to set sender as default: ${senderName}`);
     ipcRenderer.sendSync('setSenderAsDefault', senderName);
     renderSenders();
 }
 
-function buildSenderRow(sender) {
-    return `<tr>
-    <td>${sender.name}</td>
-    <td>${buildAddressColumnText(sender)}</td>
-    <td>${sender.isDefault ? 'TAK' : ''}</td>
-    <td>
-            <button class="btn btn-info" onclick="onSetSenderAsDefaultClick('${sender.name}')">Ustaw jako domyślny</button>
-            <button class="btn btn-danger" onclick="onDeleteSenderClick('${sender.name}')">Usuń</button>
-    </td>
-    
-    </tr>`;
-}
-
-function buildAddressColumnText(sender) {
+Senders.buildAddressColumnText = function (sender) {
     let html = '';
     for (let i = 0; i < sender.address.length; i++) {
         html += sender.address[i];
@@ -64,3 +53,17 @@ function buildAddressColumnText(sender) {
     }
     return html;
 }
+
+Senders.buildSenderRow = function (sender) {
+    return `<tr>
+    <td>${sender.name}</td>
+    <td>${Senders.buildAddressColumnText(sender)}</td>
+    <td>${sender.isDefault ? 'TAK' : ''}</td>
+    <td>
+            <button class="btn btn-info" onclick="Senders.onSetSenderAsDefaultClick('${sender.name}')">Ustaw jako domyślny</button>
+            <button class="btn btn-danger" onclick="Senders.onDeleteSenderClick('${sender.name}')">Usuń</button>
+    </td>
+    
+    </tr>`;
+}
+
