@@ -8,6 +8,7 @@ import { MultipleRecipientsExtractor } from './services/document-recipients/mult
 import { PdfGenerator } from './services/pdf-generator';
 import { PreferencesService } from './services/preferences-service';
 import { ProofOfPostageService } from './services/proof-of-postage-service';
+import { RecipientStore } from './services/recipient-store';
 import { SenderStore } from './services/sender-store';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -67,6 +68,7 @@ const recipientExtractor = new MultipleRecipientsExtractor(addressLinesExtractor
 const documentProcessor = new DocumentProcessor(recipientExtractor);
 const pdfGenerator = new PdfGenerator();
 const proofOfPostageService = new ProofOfPostageService(pdfGenerator, senderStore, preferencesService);
+const recipientsStore = new RecipientStore(preferencesService);
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
@@ -122,4 +124,20 @@ ipcMain.on('changeConfirmationsLocation', (event,) => {
 
 ipcMain.on('changeRecipientsFileLocation', (event,) => {
   event.returnValue = preferencesService.changeRecipientsFileLocation();
+});
+
+/**
+ * Recipients integration
+ */
+
+ipcMain.on('getListOfRecipients', (event) => {
+  event.returnValue = recipientsStore.getAllRecipients();
+})
+
+ipcMain.on('addRecipient', (event, arg) => {
+  event.returnValue = recipientsStore.addRecipient(arg);
+});
+
+ipcMain.on('deleteRecipient', (event, arg) => {
+  event.returnValue = recipientsStore.deleteRecipient(arg);
 });

@@ -217,7 +217,8 @@ ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
         `
         }
         $(`div[data-filename~="'${document.fileName}'"`).append(statusText)
-    })
+    });
+    $('#loading-modal').modal('hide');
 });
 
 

@@ -4,10 +4,10 @@
 const Senders = {};
 
 function renderSenders() {
-    const senders = ipcRenderer.sendSync('getListOfSenders');
+    Senders.senders = ipcRenderer.sendSync('getListOfSenders');
 
     $("#sender-table-body").empty()
-    senders.forEach(sender => {
+    Senders.senders.forEach(sender => {
         $("#sender-table-body").append(Senders.buildSenderRow(sender));
     });
 }
@@ -23,6 +23,11 @@ Senders.onSaveSenderClick = function () {
     }
     if (!sender.address.length || !sender.address[0]) {
         alert('Adres jest wymagany');
+        return;
+    }
+    const nameAlreadyExists = Senders.senders.some((currentSender) => currentSender.name === sender.name);
+    if (nameAlreadyExists) {
+        alert('Nazwa jest już zajęta');
         return;
     }
     console.log('Sending request to add sender:')
