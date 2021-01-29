@@ -1,7 +1,9 @@
 /*global $*/
 /* global ipcRenderer*/
 
-function renderSenders() {
+const Recipients = {};
+
+function renderRecipients() {
     // const senders = ipcRenderer.sendSync('getListOfSenders');
 
     $("#recipients-table-body").empty()
@@ -10,6 +12,6 @@ function renderSenders() {
     // });
 }
 
-function onSaveRecipientClick() {
+Recipients.onSaveRecipientClick = function () {
 
 }

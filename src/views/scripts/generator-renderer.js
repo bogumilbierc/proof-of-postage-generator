@@ -20,6 +20,7 @@
  * @type {ProcessedDocument[]}
  */
 let processedDocuments = [];
+const Generator = {};
 
 function renderGenerator() {
     console.log('rendering generator');
@@ -30,7 +31,7 @@ function renderGenerator() {
     });
 }
 
-function onProcessSingleFileClick() {
+Generator.onProcessSingleFileClick = function () {
     console.log('Sending event to ipc renderer - not paths');
     const processRequest = {
         sender: $('#generator-sender-select').val()
@@ -43,7 +44,7 @@ function onProcessSingleFileClick() {
  * 
  * @param {ProcessedDocument} document 
  */
-function renderRecipients(document) {
+Generator.renderRecipients = function (document) {
     if (!document.recipients) {
         return '';
     }
@@ -58,7 +59,7 @@ function renderRecipients(document) {
  * 
  * @param {ProcessedDocument[]} processedDocuments 
  */
-function renderProcessingSummary(processedDocuments) {
+Generator.renderProcessingSummary = function (processedDocuments) {
     $('#generator-summary').show();
     $('#generator-summary').empty();
 
@@ -76,24 +77,24 @@ function renderProcessingSummary(processedDocuments) {
                 `
                 <div class="row">
                 <div class="col-8">
-                    <textarea class="w-100" oninput="onTextAreaInput('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-address')" ${dataTags} name="recipient-${recipientIndex}-address" id="recipient-${recipientIndex}-address">${recipient.address.join('\n')}</textarea>
+                    <textarea class="w-100" oninput="Generator.onTextAreaInput('${document.fileName}', ${recipientIndex}, 'recipient-${recipientIndex}-address')" ${dataTags} name="recipient-${recipientIndex}-address" id="recipient-${recipientIndex}-address">${recipient.address.join('\n')}</textarea>
                 </div>
                 <div class="col-2">
                     <div class="form-check">
-                        <input class="form-check-input" onchange="onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, '${priorityShipmentCheckboxId}')" ${dataTags} type="checkbox" id="${priorityShipmentCheckboxId}" name="recipient-${recipientIndex}-priority">
+                        <input class="form-check-input" onchange="Generator.onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, '${priorityShipmentCheckboxId}')" ${dataTags} type="checkbox" id="${priorityShipmentCheckboxId}" name="recipient-${recipientIndex}-priority">
                         <label class="form-check-label" for="${priorityShipmentCheckboxId}">
                         Priorytet
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" onchange="onSaveRecipientCheckboxChange('${document.fileName}', ${recipientIndex}, '${saveRecipientCheckboxId}')" ${dataTags} type="checkbox" id="${saveRecipientCheckboxId}" name="recipient-${recipientIndex}-save-recipient">
+                        <input class="form-check-input" onchange="Generator.onSaveRecipientCheckboxChange('${document.fileName}', ${recipientIndex}, '${saveRecipientCheckboxId}')" ${dataTags} type="checkbox" id="${saveRecipientCheckboxId}" name="recipient-${recipientIndex}-save-recipient">
                         <label class="form-check-label" for="${saveRecipientCheckboxId}">
                         Zapisz
                         </label>
                     </div>
                 </div>
                 <div class="col-2">
-                    <button class="btn btn-danger" onclick="onDeleteRecipientClick('${document.fileName}', ${recipientIndex})">Usuń</button>
+                    <button class="btn btn-danger" onclick="Generator.onDeleteRecipientClick('${document.fileName}', ${recipientIndex})">Usuń</button>
                 </div>
             </form>`
             );
@@ -101,10 +102,10 @@ function renderProcessingSummary(processedDocuments) {
         $('#generator-summary').append(`
             <div class="row" data-filename="'${document.fileName}'">
                 <div class="col text-center">
-                    <button class="btn btn-success" onclick="onGeneratorSaveRecipientsClick('${document.fileName}')">Zapisz odbiorców</button>
+                    <button class="btn btn-success" onclick="Generator.onGeneratorSaveRecipientsClick('${document.fileName}')">Zapisz odbiorców</button>
                 </div>
                 <div class="col text-center">
-                    <button class="btn btn-success" onclick="onGenerateConfirmationClick('${document.fileName}')">Generuj potwierdzenie</button>
+                    <button class="btn btn-success" onclick="Generator.onGenerateConfirmationClick('${document.fileName}')">Generuj potwierdzenie</button>
                 </div>
             </div>
             `);
@@ -115,7 +116,7 @@ function renderProcessingSummary(processedDocuments) {
     });
 }
 
-function onTextAreaInput(fileName, recipientIndex, textAreaId) {
+Generator.onTextAreaInput = function (fileName, recipientIndex, textAreaId) {
     const textAreaValue = $(`#${textAreaId}`).val();
     console.log(`Updating document ${fileName} for recipient: ${recipientIndex} with ${textAreaValue}`);
     processedDocuments.forEach((document) => {
@@ -125,7 +126,7 @@ function onTextAreaInput(fileName, recipientIndex, textAreaId) {
     })
 }
 
-function onPriorityShipmentCheckboxChange(fileName, recipientIndex, checkboxId) {
+Generator.onPriorityShipmentCheckboxChange = function (fileName, recipientIndex, checkboxId) {
     const isPriorityShipmentSelected = !!$(`#${checkboxId}`).prop('checked');
     console.log(`Updating document ${fileName} for recipient: ${recipientIndex} with priority shipment ${isPriorityShipmentSelected}`);
     processedDocuments.forEach((document) => {
@@ -135,16 +136,16 @@ function onPriorityShipmentCheckboxChange(fileName, recipientIndex, checkboxId) 
     })
 }
 
-function onDeleteRecipientClick(fileName, recipientIndex) {
+Generator.onDeleteRecipientClick = function (fileName, recipientIndex) {
     processedDocuments.forEach((document) => {
         if (document.fileName === fileName) {
             document.recipients.splice(recipientIndex, 1);
         }
     });
-    renderProcessingSummary(processedDocuments);
+    Generator.renderProcessingSummary(processedDocuments);
 }
 
-function onGenerateConfirmationClick(fileName) {
+Generator.onGenerateConfirmationClick = function (fileName) {
     $('#loading-modal').modal('show');
     const request = {
         documents: processedDocuments.filter((document) => document.fileName === fileName),
@@ -153,13 +154,13 @@ function onGenerateConfirmationClick(fileName) {
     ipcRenderer.send('generateConfirmations', request);
 }
 
-function onSaveRecipientCheckboxChange(fileName, recipientIndex, checkboxId) {
+Generator.onSaveRecipientCheckboxChange = function (fileName, recipientIndex, checkboxId) {
     const isSaveCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
     console.log(`Document ${fileName} for recipient: ${recipientIndex} save ${isSaveCheckboxSelected}`);
 }
 
 
-function onGeneratorSaveRecipientsClick(fileName) {
+Generator.onGeneratorSaveRecipientsClick = function (fileName) {
     console.log(`This should save recipients for filename: ${fileName}`);
 }
 
@@ -188,7 +189,7 @@ ipcRenderer.on('processDocumentsResponse', (event, arg) => {
     console.log('Processing response from backend:');
     console.log(arg);
     processedDocuments = arg;
-    renderProcessingSummary(processedDocuments);
+    Generator.renderProcessingSummary(processedDocuments);
 });
 
 ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
