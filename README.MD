@@ -27,8 +27,11 @@ W górnej części okna znajduje sie dropdown z listą zdefiniowanych nadawców.
 Środkowa częśc okna to miejsce do ładowania dokumentów - można je załadować klikając guzik, lub po prostu przeciągając dokumenty na okno aplikacji.
 Ekstrakcja odbiorców rozpocznie się automatycznie.
 
-Po zakończeniu ekstrakcji odbiorców będzie widoczna lista adresatów z możliwością jej edycji.
+Po zakończeniu ekstrakcji odbiorców będzie widoczna lista adresatów z możliwością jej edycji oraz zaznaczania, których adresatow chcemy zapisać w książce (należy ich zaznaczyć oraz wcisnąć guzik "Zapisz odbiorców").
 ![Okno generatora z odbiorcami](/docs/generator-recipients.png)
+
+Możemy również dodać do każdego dokumentu dodatkowych adresatów z książki przez wcisnięcie guzika "Dodaj więcej odbiorców", który pokaże modal z wyborem ww.
+![Okno generatora z wyborem dodatkowych odbiorców](/docs/generator-add-more-recipients.png)
 
 Po zakończeniu edycji należy wcisnąć guzik "Generuj potwierdzenie" aby wygenerować PDF. W czasie generacji będzie wyświetlony ekran ładowania
 ![Okno generatora z ekranem ładowania](/docs/generator-processing.png)
