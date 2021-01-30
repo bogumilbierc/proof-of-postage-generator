@@ -13,6 +13,7 @@
 
 /**
  * @typedef {object} Recipient
+ * @property {string} [name]
  * @property {string[]} address
  * @property {boolean} [priorityShipment]
  * @property {boolean} [saveRecipient]

@@ -12,10 +12,16 @@ function renderRecipients() {
     });
 }
 
+/**
+ * @returns {Recipient[]}
+ */
 Recipients.getAllRecipients = () => {
     return ipcRenderer.sendSync('getListOfRecipients');
 }
 
+/**
+ * @returns {void}
+ */
 Recipients.onSaveRecipientClick = () => {
     const recipient = {
         name: $("#add-recipient-name").val(),
@@ -37,6 +43,11 @@ Recipients.onSaveRecipientClick = () => {
     Recipients.saveRecipient(recipient);
 }
 
+/**
+ * 
+ * @param {Recipient} recipient 
+ * @returns {string}
+ */
 Recipients.buildRecipientRow = (recipient) => {
     return `<tr>
     <td>${recipient.name}</td>
@@ -48,6 +59,12 @@ Recipients.buildRecipientRow = (recipient) => {
     </tr>`;
 }
 
+/**
+ * 
+ * @param {Recipient[]} recipientsToSave 
+ * @param {boolean} showAlert 
+ * @returns {void}
+ */
 Recipients.saveMultipleRecipients = (recipientsToSave, showAlert) => {
     recipientsToSave.forEach((recipient) => Recipients.saveRecipient(recipient));
     if (showAlert) {
@@ -55,6 +72,11 @@ Recipients.saveMultipleRecipients = (recipientsToSave, showAlert) => {
     }
 }
 
+/**
+ * 
+ * @param {Recipient} recipient 
+ * @returns {void}
+ */
 Recipients.saveRecipient = (recipient) => {
     const recipientToSave = {
         name: recipient.name ? recipient.name : recipient.address[0],
@@ -66,12 +88,22 @@ Recipients.saveRecipient = (recipient) => {
     renderRecipients();
 }
 
+/**
+ * 
+ * @param {string} recipientName 
+ * @returns {void}
+ */
 Recipients.onDeleteRecipientClick = (recipientName) => {
     console.log(`Sending request to delete recipient: ${recipientName}`);
     ipcRenderer.sendSync('deleteRecipient', recipientName);
     renderRecipients();
 }
 
+/**
+ * 
+ * @param {Recipient} recipient 
+ * @returns {string}
+ */
 Recipients.buildAddressColumnText = (recipient) => {
     let html = '';
     for (let i = 0; i < recipient.address.length; i++) {
