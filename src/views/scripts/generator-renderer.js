@@ -70,7 +70,7 @@ Generator.renderProcessingSummary = function () {
                 </div>
                 <div class="col-2">
                     <div class="form-check">
-                        <input class="form-check-input" onchange="Generator.onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, '${priorityShipmentCheckboxId}')" ${dataTags} type="checkbox" id="${priorityShipmentCheckboxId}" name="recipient-${recipientIndex}-priority">
+                        <input class="form-check-input" onchange="Generator.onPriorityShipmentCheckboxChange('${document.fileName}', ${recipientIndex}, '${priorityShipmentCheckboxId}')" ${dataTags} type="checkbox" id="${priorityShipmentCheckboxId}" name="recipient-${recipientIndex}-priority" ${recipient.priorityShipment ? 'checked' : ''}>
                         <label class="form-check-label" for="${priorityShipmentCheckboxId}">
                         Priorytet
                         </label>
