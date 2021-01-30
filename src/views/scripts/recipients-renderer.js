@@ -4,12 +4,16 @@
 const Recipients = {};
 
 function renderRecipients() {
-    Recipients.recipients = ipcRenderer.sendSync('getListOfRecipients');
+    Recipients.recipients = Recipients.getAllRecipients();
 
     $("#recipients-table-body").empty()
     Recipients.recipients.forEach(recipients => {
         $("#recipients-table-body").append(Recipients.buildRecipientRow(recipients));
     });
+}
+
+Recipients.getAllRecipients = () => {
+    return ipcRenderer.sendSync('getListOfRecipients');
 }
 
 Recipients.onSaveRecipientClick = () => {
@@ -30,10 +34,7 @@ Recipients.onSaveRecipientClick = () => {
         alert('Adres jest wymagany');
         return;
     }
-    console.log('Sending request to add recipient:')
-    console.log(recipient);
-    ipcRenderer.sendSync('addRecipient', recipient);
-    renderRecipients();
+    Recipients.saveRecipient(recipient);
 }
 
 Recipients.buildRecipientRow = (recipient) => {
@@ -45,6 +46,24 @@ Recipients.buildRecipientRow = (recipient) => {
     </td>
     
     </tr>`;
+}
+
+Recipients.saveMultipleRecipients = (recipientsToSave, showAlert) => {
+    recipientsToSave.forEach((recipient) => Recipients.saveRecipient(recipient));
+    if (showAlert) {
+        alert('Zapisano odbiorców');
+    }
+}
+
+Recipients.saveRecipient = (recipient) => {
+    const recipientToSave = {
+        name: recipient.name ? recipient.name : recipient.address[0],
+        address: recipient.address
+    };
+    console.log('Sending request to add recipient:')
+    console.log(recipientToSave);
+    ipcRenderer.sendSync('addRecipient', recipientToSave);
+    renderRecipients();
 }
 
 Recipients.onDeleteRecipientClick = (recipientName) => {

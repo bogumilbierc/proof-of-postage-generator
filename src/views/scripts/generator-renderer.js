@@ -1,5 +1,6 @@
 /*global $*/
 /* global ipcRenderer*/
+/* global Recipients */
 
 /** 
  * @typedef {object} ProcessedDocument 
@@ -14,6 +15,7 @@
  * @typedef {object} Recipient
  * @property {string[]} address
  * @property {boolean} [priorityShipment]
+ * @property {boolean} [saveRecipient]
  */
 
 /**
@@ -157,11 +159,30 @@ Generator.onGenerateConfirmationClick = function (fileName) {
 Generator.onSaveRecipientCheckboxChange = function (fileName, recipientIndex, checkboxId) {
     const isSaveCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
     console.log(`Document ${fileName} for recipient: ${recipientIndex} save ${isSaveCheckboxSelected}`);
+    processedDocuments.forEach((document) => {
+        if (document.fileName === fileName) {
+            document.recipients[recipientIndex].saveRecipient = isSaveCheckboxSelected;
+        }
+    })
 }
 
 
 Generator.onGeneratorSaveRecipientsClick = function (fileName) {
     console.log(`This should save recipients for filename: ${fileName}`);
+    /**
+     * @type {ProcessedDocument}
+     */
+    const documentWithRecipients = processedDocuments.find((document) => document.fileName === fileName);
+    if (!documentWithRecipients) {
+        alert("Błąd - nie można znaleźć dopasować dokumentu, dla którego mają zostać zapisani odbiorcy!");
+        return;
+    }
+    const recipientsToSave = documentWithRecipients.recipients.filter((recipient) => recipient.saveRecipient);
+    if (!recipientsToSave || !recipientsToSave.length) {
+        alert("Błąd - nie wybrano żadnych odbiorców do zapisania");
+        return;
+    }
+    Recipients.saveMultipleRecipients(recipientsToSave, true);
 }
 
 document.addEventListener('drop', (event) => {
