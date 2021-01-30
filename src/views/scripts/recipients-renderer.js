@@ -4,8 +4,8 @@
 const Recipients = {};
 
 function renderRecipients() {
-    Recipients.recipients = Recipients.getAllRecipients();
-
+    Recipients.getAllRecipients();
+    
     $("#recipients-table-body").empty()
     Recipients.recipients.forEach(recipients => {
         $("#recipients-table-body").append(Recipients.buildRecipientRow(recipients));
@@ -16,8 +16,18 @@ function renderRecipients() {
  * @returns {Recipient[]}
  */
 Recipients.getAllRecipients = () => {
-    return ipcRenderer.sendSync('getListOfRecipients');
+    Recipients.recipients = ipcRenderer.sendSync('getListOfRecipients');
+    return Recipients.recipients;
 }
+
+/**
+ * 
+ * @param {string} name 
+ * @returns {Recipient}
+ */
+Recipients.getByName = (name) => {
+    return Recipients.recipients.find((recipient) => recipient.name === name);
+};
 
 /**
  * @returns {void}

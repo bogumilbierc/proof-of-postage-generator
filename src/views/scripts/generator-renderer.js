@@ -46,24 +46,9 @@ Generator.onProcessSingleFileClick = function () {
 
 /**
  * 
- * @param {ProcessedDocument} document 
- */
-Generator.renderRecipients = function (document) {
-    if (!document.recipients) {
-        return '';
-    }
-    return document.recipients
-        .map((recipient, index) => {
-            return `<div class="form-group"><textarea id="recipient-${index} class="form-control" rows=">${recipient.address.length + 1}">${recipient.address.join('\n')}</textarea></div>`
-        })
-        .join('<br/>');
-}
-
-/**
- * 
  * @param {ProcessedDocument[]} processedDocuments 
  */
-Generator.renderProcessingSummary = function (processedDocuments) {
+Generator.renderProcessingSummary = function () {
     $('#generator-summary').show();
     $('#generator-summary').empty();
 
@@ -149,7 +134,7 @@ Generator.onDeleteRecipientClick = function (fileName, recipientIndex) {
             document.recipients.splice(recipientIndex, 1);
         }
     });
-    Generator.renderProcessingSummary(processedDocuments);
+    Generator.renderProcessingSummary();
 }
 
 Generator.onGenerateConfirmationClick = function (fileName) {
@@ -220,7 +205,7 @@ ipcRenderer.on('processDocumentsResponse', (event, arg) => {
     console.log('Processing response from backend:');
     console.log(arg);
     processedDocuments = arg;
-    Generator.renderProcessingSummary(processedDocuments);
+    Generator.renderProcessingSummary();
 });
 
 ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
