@@ -1,6 +1,7 @@
 /*global $*/
 /* global ipcRenderer*/
 /* global Recipients */
+/* global RecipientsModal */
 
 /** 
  * @typedef {object} ProcessedDocument 
@@ -108,6 +109,9 @@ Generator.renderProcessingSummary = function (processedDocuments) {
                     <button class="btn btn-success" onclick="Generator.onGeneratorSaveRecipientsClick('${document.fileName}')">Zapisz odbiorców</button>
                 </div>
                 <div class="col text-center">
+                    <button class="btn btn-success" onclick="Generator.onManuallyAddMoreRecipientsClick('${document.fileName}')">Dodaj więcej odbiorców</button>
+                </div>
+                <div class="col text-center">
                     <button class="btn btn-success" onclick="Generator.onGenerateConfirmationClick('${document.fileName}')">Generuj potwierdzenie</button>
                 </div>
             </div>
@@ -184,6 +188,11 @@ Generator.onGeneratorSaveRecipientsClick = function (fileName) {
         return;
     }
     Recipients.saveMultipleRecipients(recipientsToSave, true);
+}
+
+Generator.onManuallyAddMoreRecipientsClick = function (fileName) {
+    RecipientsModal.configureFor(fileName);
+    RecipientsModal.show();
 }
 
 document.addEventListener('drop', (event) => {

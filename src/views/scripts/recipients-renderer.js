@@ -79,8 +79,8 @@ Recipients.saveMultipleRecipients = (recipientsToSave, showAlert) => {
  */
 Recipients.saveRecipient = (recipient) => {
     const recipientToSave = {
+        ...recipient,
         name: recipient.name ? recipient.name : recipient.address[0],
-        address: recipient.address
     };
     console.log('Sending request to add recipient:')
     console.log(recipientToSave);
