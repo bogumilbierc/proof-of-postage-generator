@@ -25,7 +25,7 @@ Po uruchomieniu aplikacji pokażę się puste okno generatora:
 W górnej części okna znajduje sie dropdown z listą zdefiniowanych nadawców. Należy wybrać nadawcę, którego chcemy użyć na wygenerowanych potwierdzeniach.
 
 Środkowa częśc okna to miejsce do ładowania dokumentów - można je załadować klikając guzik, lub po prostu przeciągając dokumenty na okno aplikacji.
-Ekstrakcja odbiorców rozpocznie się automatycznie.
+Ekstrakcja odbiorców rozpocznie się automatycznie. Punktem granicznym dla rozdzielania odbiorców są kody pocztowe.
 
 Po zakończeniu ekstrakcji odbiorców będzie widoczna lista adresatów z możliwością jej edycji oraz zaznaczania, których adresatow chcemy zapisać w książce (należy ich zaznaczyć oraz wcisnąć guzik "Zapisz odbiorców").
 ![Okno generatora z odbiorcami](/docs/generator-recipients.png)
@@ -87,3 +87,7 @@ yarn start
 yarn test
 ```
 
+### Zbudowanie wersji "dystrybucjnej"
+```
+yarn make
+```
