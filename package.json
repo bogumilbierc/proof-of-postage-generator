@@ -1,7 +1,7 @@
 {
   "name": "proof-of-postage-generator",
   "productName": "proof-of-postage-generator",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Generates proof of postage for Word documents",
   "main": "dist/index.js",
   "scripts": {
