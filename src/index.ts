@@ -81,7 +81,7 @@ ipcMain.on('processDocuments', async (event, arg) => {
 
 ipcMain.on('generateConfirmations', async (event, arg) => {
   log.debug(`Got request to process: ${JSON.stringify(arg)}`);
-  event.reply('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg));
+  event.sender.send('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg));
 });
 
 /**

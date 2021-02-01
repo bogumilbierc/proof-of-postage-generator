@@ -57,9 +57,10 @@ Generator.renderProcessingSummary = function () {
         $('#generator-summary').append(`<h3 class="text-center">${document.fileName}</h3>`);
         document.recipients.forEach((recipient, recipientIndex) => {
 
+            const filenameWithoutSpaces = document.fileName.replace(' ', '');
             const dataTags = `data-filename="${document.fileName}" data-recipientindex="${recipientIndex}"`;
-            const priorityShipmentCheckboxId = `recipient-${recipientIndex}-priority-shipment-check`;
-            const saveRecipientCheckboxId = `recipient-${recipientIndex}-save-recipient-check`;
+            const priorityShipmentCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-priority-shipment-check`;
+            const saveRecipientCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-save-recipient-check`;
 
             $('#generator-summary').append(
 
@@ -138,7 +139,7 @@ Generator.onDeleteRecipientClick = function (fileName, recipientIndex) {
 }
 
 Generator.onGenerateConfirmationClick = function (fileName) {
-    $('#loading-modal').modal('show');
+    Generator.showLoadingModal();
     const request = {
         documents: processedDocuments.filter((document) => document.fileName === fileName),
         sender: $('#generator-sender-select').val()
@@ -180,6 +181,45 @@ Generator.onManuallyAddMoreRecipientsClick = function (fileName) {
     RecipientsModal.show();
 }
 
+Generator.onGeneratorFilenameSaveClick = () => {
+    const fileName = $('#generator-filename').val().trim();
+    if (!fileName) {
+        alert('Nazwa pliku jest wymagana');
+        return;
+    }
+    /**
+     * @type {ProcessedDocument}
+     */
+    const manuallyCreatedDocument = {
+        fileName,
+        recipients: []
+    };
+    processedDocuments.push(manuallyCreatedDocument);
+    Generator.renderProcessingSummary();
+    $('#generator-filename-modal').modal('hide');
+}
+
+Generator.onGenerateWithoutInputFileClick = () => {
+    $('#generator-filename').val('');
+    $('#generator-filename-modal').modal('show');
+}
+
+Generator.showLoadingModal = () => {
+    $('#loading-modal').modal('show');
+};
+
+Generator.hideLoadingModal = () => {
+    console.log('Trying to hide loading modal');
+    $('#loading-modal').modal('hide');
+    window.setTimeout(() => $('#loading-modal').modal('hide'), 1000);
+}
+
+Generator.onGeneratorModalFilenameKeyup = (event) => {
+    if (event.keyCode === 13) {
+        Generator.onGeneratorFilenameSaveClick();
+    }
+}
+
 document.addEventListener('drop', (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -209,7 +249,6 @@ ipcRenderer.on('processDocumentsResponse', (event, arg) => {
 });
 
 ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
-    $('#loading-modal').modal('hide');
     console.log('Generation response from backend:');
     console.log(processedDocuments);
 
@@ -232,9 +271,9 @@ ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
                 </div>
         `
         }
-        $(`div[data-filename~="'${document.fileName}'"`).append(statusText)
+        $(`div[data-filename~="'${document.fileName}'"`).append(statusText);
     });
-    $('#loading-modal').modal('hide');
+    Generator.hideLoadingModal();
 });
 
 

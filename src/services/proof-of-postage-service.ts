@@ -24,7 +24,7 @@ export class ProofOfPostageService {
         const processedDocuments = request.documents;
 
         for (const document of processedDocuments) {
-            document.fileName = path.parse(document.path).name;
+            document.fileName = document.fileName || path.parse(document.path).name;
             if (document?.recipients?.length) {
                 const confirmationPath = this.getConfirmationFilePath(document.fileName)
                 document.confirmationLocation = confirmationPath;
@@ -48,8 +48,8 @@ export class ProofOfPostageService {
     private getConfirmationsFolderLocation(): string {
         const rootConfirmationsFolder = this.preferencesService.getUserPreferences().confirmationsLocation;
         const date = new Date();
-        const day = `${date.getDay()}`.padStart(2, '0');
-        const month = `${date.getMonth()}`.padStart(2, '0');
+        const day = `${date.getDate()}`.padStart(2, '0');
+        const month = `${date.getMonth() + 1}`.padStart(2, '0');
         const year = date.getFullYear();
         const folderPath = path.join(
             rootConfirmationsFolder,
