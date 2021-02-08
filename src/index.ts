@@ -103,6 +103,10 @@ ipcMain.on('setSenderAsDefault', (event, arg) => {
   event.returnValue = senderStore.setSenderAsDefault(arg);
 })
 
+ipcMain.on('toggleSenderStickerRequired', (event, arg) => {
+  event.returnValue = senderStore.toggleSenderStickerRequired(arg);
+});
+
 /**
  * Preferences integration
  */

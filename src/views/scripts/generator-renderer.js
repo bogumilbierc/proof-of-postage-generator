@@ -18,6 +18,7 @@
  * @property {string[]} address
  * @property {boolean} [priorityShipment]
  * @property {boolean} [saveRecipient]
+ * @property {boolean} [retrievalConfirmation]
  */
 
 /**
@@ -61,6 +62,7 @@ Generator.renderProcessingSummary = function () {
             const dataTags = `data-filename="${document.fileName}" data-recipientindex="${recipientIndex}"`;
             const priorityShipmentCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-priority-shipment-check`;
             const saveRecipientCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-save-recipient-check`;
+            const retrievalConfirmation = `recipient-${recipientIndex}-${filenameWithoutSpaces}-retrieval-confirmation-check`;
 
             $('#generator-summary').append(
 
@@ -80,6 +82,12 @@ Generator.renderProcessingSummary = function () {
                         <input class="form-check-input" onchange="Generator.onSaveRecipientCheckboxChange('${document.fileName}', ${recipientIndex}, '${saveRecipientCheckboxId}')" ${dataTags} type="checkbox" id="${saveRecipientCheckboxId}" name="recipient-${recipientIndex}-save-recipient">
                         <label class="form-check-label" for="${saveRecipientCheckboxId}">
                         Zapisz
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" onchange="Generator.onRetrievalConfirmationCheckboxChange('${document.fileName}', ${recipientIndex}, '${retrievalConfirmation}')" ${dataTags} type="checkbox" id="${retrievalConfirmation}" name="recipient-${recipientIndex}-retrieval-confirmation">
+                        <label class="form-check-label" for="${retrievalConfirmation}">
+                        Potwierdzenie odbioru
                         </label>
                     </div>
                 </div>
@@ -156,6 +164,16 @@ Generator.onSaveRecipientCheckboxChange = function (fileName, recipientIndex, ch
         }
     })
 }
+
+Generator.onRetrievalConfirmationCheckboxChange = (fileName, recipientIndex, checkboxId) => {
+    const isRetrievalCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
+    console.log(`Document ${fileName} for recipient: ${recipientIndex} retrieval confirmation ${isRetrievalCheckboxSelected}`);
+    processedDocuments.forEach((document) => {
+        if (document.fileName === fileName) {
+            document.recipients[recipientIndex].retrievalConfirmation = isRetrievalCheckboxSelected;
+        }
+    })
+};
 
 
 Generator.onGeneratorSaveRecipientsClick = function (fileName) {

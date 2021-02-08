@@ -48,6 +48,12 @@ Senders.onSetSenderAsDefaultClick = function (senderName) {
     renderSenders();
 }
 
+Senders.onToggleStickerRequiredClick = (senderName) => {
+    console.log(`Sending request to toggle sender sticker: ${senderName}`);
+    ipcRenderer.sendSync('toggleSenderStickerRequired', senderName);
+    renderSenders();
+}
+
 Senders.buildAddressColumnText = function (sender) {
     let html = '';
     for (let i = 0; i < sender.address.length; i++) {
@@ -64,8 +70,12 @@ Senders.buildSenderRow = function (sender) {
     <td>${sender.name}</td>
     <td>${Senders.buildAddressColumnText(sender)}</td>
     <td>${sender.isDefault ? 'TAK' : ''}</td>
+    <td>${sender.isStickerRequired ? 'TAK' : ''}</td>
     <td>
             <button class="btn btn-info" onclick="Senders.onSetSenderAsDefaultClick('${sender.name}')">Ustaw jako domyślny</button>
+            <button class="btn btn-info" onclick="Senders.onToggleStickerRequiredClick('${sender.name}')">
+            ${sender.isStickerRequired ? 'Wyłącz naklejkę' : 'Włącz naklejkę'}
+            </button>
             <button class="btn btn-danger" onclick="Senders.onDeleteSenderClick('${sender.name}')">Usuń</button>
     </td>
     

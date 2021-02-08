@@ -50,6 +50,21 @@ export class SenderStore {
         return sender;
     }
 
+    toggleSenderStickerRequired(name: string): void {
+        const senders = this.getAllSenders();
+        const updatedSenders = senders.map((sender: Sender) => {
+            if (sender.name === name) {
+                return {
+                    ...sender,
+                    isStickerRequired: !sender.isStickerRequired
+                }
+            }
+            return sender;
+        });
+        this.storeSenders(updatedSenders);
+    }
+
+
     private storeSenders(senders: Sender[]): void {
         const sendersLocation = this.preferencesService.getUserPreferences().sendersStoreLocation;
         log.debug(`Storing list of senders in: ${sendersLocation}`);
@@ -63,4 +78,5 @@ export interface Sender {
     name: string;
     address: string[];
     isDefault?: boolean;
+    isStickerRequired?: boolean;
 }
