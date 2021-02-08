@@ -19,6 +19,8 @@
   <script src="scripts/recipients-renderer.js"></script>
 
   <script src="scripts/recipients-modal.js"></script>
+  <script src="scripts/single-recipient-modal.js"></script>
+
 </head>
 
 <body class="container-fluid">
@@ -65,7 +67,8 @@
           <button class="btn btn-primary" onclick="Generator.onProcessSingleFileClick()">Wczytaj plik</button>
         </div>
         <div class="col">
-          <button class="btn btn-warning" onclick="Generator.onGenerateWithoutInputFileClick()">Generuj bez pliku</button>
+          <button class="btn btn-warning" onclick="Generator.onGenerateWithoutInputFileClick()">Generuj bez
+            pliku</button>
         </div>
       </div>
 
@@ -157,7 +160,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">Przetwarzanie w trakcie</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-loading-dialog-button"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            id="close-loading-dialog-button"></button>
         </div>
         <div class="modal-body text-center">
           <p>Okno zamknie się, gdy przetwarzanie zostanie zakończone</p>
@@ -204,8 +208,30 @@
     </div>
   </div>
 
-    <!-- Manually generate confirmation FileName modal -->
-    <div class="modal fade" id="generator-filename-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  <!-- Manually add single recipient Modal -->
+  <div class="modal fade" id="add-single-recipients-modal" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="addSingleRecipientLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSingleRecipientLabel">Dodaj odbiorcę</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="mb-3">
+            <label for="add-single-recipient-ta" class="form-label">Adres</label>
+            <textarea class="form-control" id="add-single-recipient-ta" rows="6"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" onclick="SingleRecipientModal.onSaveClick()">Zatwierdź</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manually generate confirmation FileName modal -->
+  <div class="modal fade" id="generator-filename-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="manualGenerationLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -216,8 +242,10 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="generator-filename" class="form-label">Nazwa pliku</label>
-            <input type="text" onkeyup="Generator.onGeneratorModalFilenameKeyup(event)" class="form-control" id="generator-filename" aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text">Nazwa pliku jest potrzebna do generacji nazwy pliku z potwierdzeniem.</div>
+            <input type="text" onkeyup="Generator.onGeneratorModalFilenameKeyup(event)" class="form-control"
+              id="generator-filename" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">Nazwa pliku jest potrzebna do generacji nazwy pliku z potwierdzeniem.
+            </div>
           </div>
         </div>
         <div class="modal-footer">

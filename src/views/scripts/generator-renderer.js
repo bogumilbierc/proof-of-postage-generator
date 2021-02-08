@@ -2,6 +2,7 @@
 /* global ipcRenderer*/
 /* global Recipients */
 /* global RecipientsModal */
+/* global SingleRecipientModal */
 
 /** 
  * @typedef {object} ProcessedDocument 
@@ -205,8 +206,9 @@ Generator.onManuallyAddMoreRecipientsClick = function (fileName) {
     RecipientsModal.show();
 }
 
-Generator.onManuallyAddRecipientClick = function(fileName) {
-
+Generator.onManuallyAddRecipientClick = function (fileName) {
+    SingleRecipientModal.configureFor(fileName);
+    SingleRecipientModal.show();
 }
 
 Generator.onGeneratorFilenameSaveClick = () => {
