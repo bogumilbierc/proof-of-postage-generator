@@ -96,16 +96,19 @@ Generator.renderProcessingSummary = function () {
         $('#generator-summary').append(`
             <div class="row" data-filename="'${document.fileName}'">
                 <div class="col text-center">
-                    <button class="btn btn-success" onclick="Generator.onGeneratorSaveRecipientsClick('${document.fileName}')">Zapisz odbiorców</button>
+                    <button class="btn btn-warning" onclick="Generator.onGeneratorSaveRecipientsClick('${document.fileName}')">Zapisz odbiorców</button>
                 </div>
                 <div class="col text-center">
-                    <button class="btn btn-success" onclick="Generator.onManuallyAddMoreRecipientsClick('${document.fileName}')">Dodaj więcej odbiorców</button>
+                    <button class="btn btn-primary" onclick="Generator.onManuallyAddMoreRecipientsClick('${document.fileName}')">Dodaj odbiorców z bazy</button>
                 </div>
                 <div class="col text-center">
-                    <button class="btn btn-success" onclick="Generator.onExportDymoLabelClick('${document.fileName}')">Eksportuj do DymoLabel</button>
+                    <button class="btn btn-primary" onclick="Generator.onManuallyAddRecipientClick('${document.fileName}')">Dodaj odbiorcę ręcznie</button>
                 </div>
                 <div class="col text-center">
-                    <button class="btn btn-success" onclick="Generator.onGenerateConfirmationClick('${document.fileName}')">Generuj potwierdzenie</button>
+                    <button class="btn btn-success" onclick="Generator.onExportDymoLabelClick('${document.fileName}')">DymoLabel</button>
+                </div>
+                <div class="col text-center">
+                    <button class="btn btn-success" onclick="Generator.onGenerateConfirmationClick('${document.fileName}')">Potwierdzenie</button>
                 </div>
             </div>
             `);
@@ -200,6 +203,10 @@ Generator.onGeneratorSaveRecipientsClick = function (fileName) {
 Generator.onManuallyAddMoreRecipientsClick = function (fileName) {
     RecipientsModal.configureFor(fileName);
     RecipientsModal.show();
+}
+
+Generator.onManuallyAddRecipientClick = function(fileName) {
+
 }
 
 Generator.onGeneratorFilenameSaveClick = () => {
