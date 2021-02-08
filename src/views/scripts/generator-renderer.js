@@ -62,7 +62,7 @@ Generator.renderProcessingSummary = function () {
             const dataTags = `data-filename="${document.fileName}" data-recipientindex="${recipientIndex}"`;
             const priorityShipmentCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-priority-shipment-check`;
             const saveRecipientCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-save-recipient-check`;
-            const retrievalConfirmation = `recipient-${recipientIndex}-${filenameWithoutSpaces}-retrieval-confirmation-check`;
+            const stickerRequired = `recipient-${recipientIndex}-${filenameWithoutSpaces}-retrieval-confirmation-check`;
 
             $('#generator-summary').append(
 
@@ -85,9 +85,9 @@ Generator.renderProcessingSummary = function () {
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" onchange="Generator.onRetrievalConfirmationCheckboxChange('${document.fileName}', ${recipientIndex}, '${retrievalConfirmation}')" ${dataTags} type="checkbox" id="${retrievalConfirmation}" name="recipient-${recipientIndex}-retrieval-confirmation">
-                        <label class="form-check-label" for="${retrievalConfirmation}">
-                        Potwierdzenie odbioru
+                        <input class="form-check-input" onchange="Generator.onStickerRequiredCheckboxChange('${document.fileName}', ${recipientIndex}, '${stickerRequired}')" ${dataTags} type="checkbox" id="${stickerRequired}" name="recipient-${recipientIndex}-sticker-required">
+                        <label class="form-check-label" for="${stickerRequired}">
+                        Naklejka
                         </label>
                     </div>
                 </div>
@@ -104,6 +104,9 @@ Generator.renderProcessingSummary = function () {
                 </div>
                 <div class="col text-center">
                     <button class="btn btn-success" onclick="Generator.onManuallyAddMoreRecipientsClick('${document.fileName}')">Dodaj więcej odbiorców</button>
+                </div>
+                <div class="col text-center">
+                    <button class="btn btn-success" onclick="Generator.onExportDymoLabelClick('${document.fileName}')">Eksportuj do DymoLabel</button>
                 </div>
                 <div class="col text-center">
                     <button class="btn btn-success" onclick="Generator.onGenerateConfirmationClick('${document.fileName}')">Generuj potwierdzenie</button>
@@ -165,12 +168,12 @@ Generator.onSaveRecipientCheckboxChange = function (fileName, recipientIndex, ch
     })
 }
 
-Generator.onRetrievalConfirmationCheckboxChange = (fileName, recipientIndex, checkboxId) => {
-    const isRetrievalCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
-    console.log(`Document ${fileName} for recipient: ${recipientIndex} retrieval confirmation ${isRetrievalCheckboxSelected}`);
+Generator.onStickerRequiredCheckboxChange = (fileName, recipientIndex, checkboxId) => {
+    const isStickerCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
+    console.log(`Document ${fileName} for recipient: ${recipientIndex} sticker required ${isStickerCheckboxSelected}`);
     processedDocuments.forEach((document) => {
         if (document.fileName === fileName) {
-            document.recipients[recipientIndex].retrievalConfirmation = isRetrievalCheckboxSelected;
+            document.recipients[recipientIndex].isStickerRequired = isStickerCheckboxSelected;
         }
     })
 };
@@ -236,6 +239,10 @@ Generator.onGeneratorModalFilenameKeyup = (event) => {
     if (event.keyCode === 13) {
         Generator.onGeneratorFilenameSaveClick();
     }
+}
+
+Generator.onExportDymoLabelClick = (fileName) => {
+    console.log(`Should export DymoLabel for: ${fileName}`);
 }
 
 document.addEventListener('drop', (event) => {
