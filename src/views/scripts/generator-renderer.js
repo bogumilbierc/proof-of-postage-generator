@@ -58,7 +58,7 @@ Generator.renderProcessingSummary = function () {
             const dataTags = `data-filename="${document.fileName}" data-recipientindex="${recipientIndex}"`;
             const priorityShipmentCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-priority-shipment-check`;
             const saveRecipientCheckboxId = `recipient-${recipientIndex}-${filenameWithoutSpaces}-save-recipient-check`;
-            const stickerRequired = `recipient-${recipientIndex}-${filenameWithoutSpaces}-retrieval-confirmation-check`;
+            const retrievalConfirmationRequired = `recipient-${recipientIndex}-${filenameWithoutSpaces}-retrieval-confirmation-check`;
 
             $('#generator-summary').append(
 
@@ -81,9 +81,9 @@ Generator.renderProcessingSummary = function () {
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" onchange="Generator.onStickerRequiredCheckboxChange('${document.fileName}', ${recipientIndex}, '${stickerRequired}')" ${dataTags} type="checkbox" id="${stickerRequired}" name="recipient-${recipientIndex}-sticker-required">
-                        <label class="form-check-label" for="${stickerRequired}">
-                        Naklejka
+                        <input class="form-check-input" onchange="Generator.onRetrievalConfirmationCheckboxChange('${document.fileName}', ${recipientIndex}, '${retrievalConfirmationRequired}')" ${dataTags} type="checkbox" id="${retrievalConfirmationRequired}" name="recipient-${recipientIndex}-retrival-confirmation">
+                        <label class="form-check-label" for="${retrievalConfirmationRequired}">
+                        Potwierdzenie odbioru
                         </label>
                     </div>
                 </div>
@@ -168,12 +168,12 @@ Generator.onSaveRecipientCheckboxChange = function (fileName, recipientIndex, ch
     })
 }
 
-Generator.onStickerRequiredCheckboxChange = (fileName, recipientIndex, checkboxId) => {
-    const isStickerCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
-    console.log(`Document ${fileName} for recipient: ${recipientIndex} sticker required ${isStickerCheckboxSelected}`);
+Generator.onRetrievalConfirmationCheckboxChange = (fileName, recipientIndex, checkboxId) => {
+    const isRetrievalConfirmationCheckboxSelected = !!$(`#${checkboxId}`).prop('checked');
+    console.log(`Document ${fileName} for recipient: ${recipientIndex} retrieval confirmation required ${isRetrievalConfirmationCheckboxSelected}`);
     processedDocuments.forEach((document) => {
         if (document.fileName === fileName) {
-            document.recipients[recipientIndex].isStickerRequired = isStickerCheckboxSelected;
+            document.recipients[recipientIndex].retrievalConfirmation = isRetrievalConfirmationCheckboxSelected;
         }
     })
 };
@@ -256,21 +256,13 @@ Generator.validateRecipients = (document) => {
 
 Generator.onExportDymoLabelClick = (fileName) => {
     console.log(`Should export DymoLabel for: ${fileName}`);
-    const document = processedDocuments.find((document) => document.fileName === fileName);
-    if (!document) {
+    const documents = processedDocuments.filter((document) => document.fileName === fileName);
+    if (!documents.length) {
         alert('Błąd - nie udało się dopasować dokuemntu');
         return;
     }
 
-    /**
-     * @type {ProcessedDocument}
-     */
-    const documentWithRelevantRecipients = {
-        ...document,
-        recipients: document.recipients.filter((recipient) => recipient.isStickerRequired)
-    }
-
-    if (!Generator.validateRecipients(documentWithRelevantRecipients)) {
+    if (!Generator.validateRecipients(documents[0])) {
         return;
     }
 
@@ -278,10 +270,10 @@ Generator.onExportDymoLabelClick = (fileName) => {
 
     const request = {
         sender,
-        documents: [documentWithRelevantRecipients]
+        documents
     };
 
-    ipcRenderer.send('exportDymoLabelCsv', request);
+    ipcRenderer.send('exportDymoLabelXlsx', request);
     Generator.showLoadingModal();
 }
 

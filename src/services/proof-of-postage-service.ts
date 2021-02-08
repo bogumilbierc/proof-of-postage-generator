@@ -4,10 +4,10 @@ import { DocumentType } from '../models/document-type.enum';
 import { GenerateConfirmationsRequest } from '../models/generate-confirmations-request.model';
 import { ProcessedDocument } from "../models/processed-document.model";
 import { Recipient } from '../models/recipient.model';
-import { CsvGenerator } from './csv-generator';
 import { PdfGenerator } from "./pdf-generator";
 import { PreferencesService } from './preferences-service';
 import { Sender, SenderStore } from "./sender-store";
+import { XlsxGenerator as XlsxGenerator } from './xlsx-generator';
 import fs = require('fs');
 
 export class ProofOfPostageService {
@@ -16,7 +16,7 @@ export class ProofOfPostageService {
         private readonly pdfGenerator: PdfGenerator,
         private readonly sendersStore: SenderStore,
         private readonly preferencesService: PreferencesService,
-        private readonly csvGenerator: CsvGenerator) {
+        private readonly xlsxGenerator: XlsxGenerator) {
 
     }
 
@@ -47,7 +47,7 @@ export class ProofOfPostageService {
         if (documentType === DocumentType.PDF) {
             return await this.pdfGenerator.safelyGenerateFile(sender, recipients, targetFilePath);
         }
-        return await this.csvGenerator.safelyGenerateFile(sender, recipients, targetFilePath);
+        return await this.xlsxGenerator.safelyGenerateFile(sender, recipients, targetFilePath);
     }
 
     private getConfirmationFilePath(filename: string, documentType: DocumentType): string {
@@ -60,7 +60,7 @@ export class ProofOfPostageService {
         }
         return path.join(
             this.getConfirmationsFolderLocation(),
-            `${filename}_odbiorcy.csv`
+            `${filename}_odbiorcy.xlsx`
         );
     }
 

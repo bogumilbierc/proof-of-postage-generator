@@ -2,7 +2,6 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as log from 'electron-log';
 import * as path from 'path';
 import { DocumentType } from './models/document-type.enum';
-import { CsvGenerator } from './services/csv-generator';
 import { AddressLinesExtractor } from './services/document-recipients/address-lines-extractor';
 import { AddressRefiner } from './services/document-recipients/address-refiner';
 import { DocumentProcessor } from './services/document-recipients/document-processor';
@@ -12,6 +11,7 @@ import { PreferencesService } from './services/preferences-service';
 import { ProofOfPostageService } from './services/proof-of-postage-service';
 import { RecipientStore } from './services/recipient-store';
 import { SenderStore } from './services/sender-store';
+import { XlsxGenerator } from './services/xlsx-generator';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -69,8 +69,8 @@ const addressRefiner = new AddressRefiner();
 const recipientExtractor = new MultipleRecipientsExtractor(addressLinesExtractor, addressRefiner);
 const documentProcessor = new DocumentProcessor(recipientExtractor);
 const pdfGenerator = new PdfGenerator();
-const csvGenerator = new CsvGenerator();
-const proofOfPostageService = new ProofOfPostageService(pdfGenerator, senderStore, preferencesService, csvGenerator);
+const xlsxGenerator = new XlsxGenerator();
+const proofOfPostageService = new ProofOfPostageService(pdfGenerator, senderStore, preferencesService, xlsxGenerator);
 const recipientsStore = new RecipientStore(preferencesService);
 
 // In this file you can include the rest of your app's specific main process
@@ -87,9 +87,9 @@ ipcMain.on('generateConfirmations', async (event, arg) => {
   event.sender.send('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg));
 });
 
-ipcMain.on('exportDymoLabelCsv', async (event, arg) => {
+ipcMain.on('exportDymoLabelXlsx', async (event, arg) => {
   log.debug(`Got request to process: ${JSON.stringify(arg)}`);
-  event.sender.send('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg, DocumentType.CSV));
+  event.sender.send('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg, DocumentType.XLSX));
 });
 
 /**
