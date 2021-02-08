@@ -95,7 +95,7 @@ Generator.renderProcessingSummary = function () {
             );
         })
         $('#generator-summary').append(`
-            <div class="row" data-filename="'${document.fileName}'">
+            <div class="row" data-filename="${document.fileName}">
                 <div class="col text-center">
                     <button class="btn btn-warning" onclick="Generator.onGeneratorSaveRecipientsClick('${document.fileName}')">Zapisz odbiorców</button>
                 </div>
@@ -114,7 +114,7 @@ Generator.renderProcessingSummary = function () {
             </div>
             `);
     });
-    $('textarea').each(function () {
+    $('#generator-summary textarea').each(function () {
         this.style.height = "";
         this.style.height = this.scrollHeight + "px";
     });
@@ -345,7 +345,7 @@ ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
                 </div>
         `
         }
-        $(`div[data-filename~="'${document.fileName}'"`).append(statusText);
+        $(`div[data-filename="${document.fileName}"`).append(statusText);
     });
     Generator.hideLoadingModal();
 });
