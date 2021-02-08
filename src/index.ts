@@ -1,6 +1,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as log from 'electron-log';
 import * as path from 'path';
+import { DocumentType } from './models/document-type.enum';
+import { CsvGenerator } from './services/csv-generator';
 import { AddressLinesExtractor } from './services/document-recipients/address-lines-extractor';
 import { AddressRefiner } from './services/document-recipients/address-refiner';
 import { DocumentProcessor } from './services/document-recipients/document-processor';
@@ -67,13 +69,14 @@ const addressRefiner = new AddressRefiner();
 const recipientExtractor = new MultipleRecipientsExtractor(addressLinesExtractor, addressRefiner);
 const documentProcessor = new DocumentProcessor(recipientExtractor);
 const pdfGenerator = new PdfGenerator();
-const proofOfPostageService = new ProofOfPostageService(pdfGenerator, senderStore, preferencesService);
+const csvGenerator = new CsvGenerator();
+const proofOfPostageService = new ProofOfPostageService(pdfGenerator, senderStore, preferencesService, csvGenerator);
 const recipientsStore = new RecipientStore(preferencesService);
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-// register events
+// register processing events
 ipcMain.on('processDocuments', async (event, arg) => {
   log.debug(`Got request to process: ${JSON.stringify(arg)}`);
   event.reply('processDocumentsResponse', await documentProcessor.processRequest(arg));
@@ -82,6 +85,11 @@ ipcMain.on('processDocuments', async (event, arg) => {
 ipcMain.on('generateConfirmations', async (event, arg) => {
   log.debug(`Got request to process: ${JSON.stringify(arg)}`);
   event.sender.send('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg));
+});
+
+ipcMain.on('exportDymoLabelCsv', async (event, arg) => {
+  log.debug(`Got request to process: ${JSON.stringify(arg)}`);
+  event.sender.send('generateConfirmationsResponse', await proofOfPostageService.processRequest(arg, DocumentType.CSV));
 });
 
 /**

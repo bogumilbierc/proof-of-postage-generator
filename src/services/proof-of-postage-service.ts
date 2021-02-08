@@ -1,10 +1,13 @@
 import * as log from 'electron-log';
 import * as path from 'path';
+import { DocumentType } from '../models/document-type.enum';
 import { GenerateConfirmationsRequest } from '../models/generate-confirmations-request.model';
 import { ProcessedDocument } from "../models/processed-document.model";
+import { Recipient } from '../models/recipient.model';
+import { CsvGenerator } from './csv-generator';
 import { PdfGenerator } from "./pdf-generator";
 import { PreferencesService } from './preferences-service';
-import { SenderStore } from "./sender-store";
+import { Sender, SenderStore } from "./sender-store";
 import fs = require('fs');
 
 export class ProofOfPostageService {
@@ -12,11 +15,12 @@ export class ProofOfPostageService {
     constructor(
         private readonly pdfGenerator: PdfGenerator,
         private readonly sendersStore: SenderStore,
-        private readonly preferencesService: PreferencesService) {
+        private readonly preferencesService: PreferencesService,
+        private readonly csvGenerator: CsvGenerator) {
 
     }
 
-    async processRequest(request: GenerateConfirmationsRequest): Promise<ProcessedDocument[]> {
+    async processRequest(request: GenerateConfirmationsRequest, documentType = DocumentType.PDF): Promise<ProcessedDocument[]> {
         log.debug(`ProofOfPostageService: Processing request: ${JSON.stringify(request)}`);
         const sender = this.sendersStore.getSender(request.sender);
         log.debug(`ProofOfPostageService: Got sender details: ${JSON.stringify(sender)}`);
@@ -26,9 +30,10 @@ export class ProofOfPostageService {
         for (const document of processedDocuments) {
             document.fileName = document.fileName || path.parse(document.path).name;
             if (document?.recipients?.length) {
-                const confirmationPath = this.getConfirmationFilePath(document.fileName)
+                const confirmationPath = this.getConfirmationFilePath(document.fileName, documentType)
                 document.confirmationLocation = confirmationPath;
-                document.pdfGenerated = await this.pdfGenerator.safelyGenerateFile(sender, document.recipients, confirmationPath);
+
+                document.pdfGenerated = await this.generateFile(sender, document.recipients, confirmationPath, documentType);
             } else {
                 log.debug(`Document: ${document.fileName} does not have recipients, skipping it`);
                 document.pdfGenerated = false;
@@ -38,10 +43,24 @@ export class ProofOfPostageService {
         return processedDocuments;
     }
 
-    private getConfirmationFilePath(filename: string): string {
+    private async generateFile(sender: Sender, recipients: Recipient[], targetFilePath: string, documentType: DocumentType): Promise<boolean> {
+        if (documentType === DocumentType.PDF) {
+            return await this.pdfGenerator.safelyGenerateFile(sender, recipients, targetFilePath);
+        }
+        return await this.csvGenerator.safelyGenerateFile(sender, recipients, targetFilePath);
+    }
+
+    private getConfirmationFilePath(filename: string, documentType: DocumentType): string {
+
+        if (documentType === DocumentType.PDF) {
+            return path.join(
+                this.getConfirmationsFolderLocation(),
+                `${filename}_potwierdzenie.pdf`
+            );
+        }
         return path.join(
             this.getConfirmationsFolderLocation(),
-            `${filename}_potwierdzenie.pdf`
+            `${filename}_odbiorcy.csv`
         );
     }
 

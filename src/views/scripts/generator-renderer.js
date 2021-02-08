@@ -39,16 +39,12 @@ function renderGenerator() {
 Generator.onProcessSingleFileClick = function () {
     console.log('Sending event to ipc renderer - not paths');
     const processRequest = {
-        sender: $('#generator-sender-select').val()
+        sender: Generator.getSender()
     }
     $('#generator-summary-wrapper').hide();
     ipcRenderer.send('processDocuments', processRequest);
 }
 
-/**
- * 
- * @param {ProcessedDocument[]} processedDocuments 
- */
 Generator.renderProcessingSummary = function () {
     $('#generator-summary').show();
     $('#generator-summary').empty();
@@ -150,11 +146,15 @@ Generator.onDeleteRecipientClick = function (fileName, recipientIndex) {
 }
 
 Generator.onGenerateConfirmationClick = function (fileName) {
-    Generator.showLoadingModal();
-    const request = {
-        documents: processedDocuments.filter((document) => document.fileName === fileName),
-        sender: $('#generator-sender-select').val()
+    const documents = processedDocuments.filter((document) => document.fileName === fileName);
+    if (!Generator.validateRecipients(documents[0])) {
+        return;
     }
+    const request = {
+        documents,
+        sender: Generator.getSender()
+    }
+    Generator.showLoadingModal();
     ipcRenderer.send('generateConfirmations', request);
 }
 
@@ -241,8 +241,56 @@ Generator.onGeneratorModalFilenameKeyup = (event) => {
     }
 }
 
+/**
+ * Validates recipients of the document
+ * @param {ProcessedDocument} document 
+ * @returns {boolean}
+ */
+Generator.validateRecipients = (document) => {
+    if (!document.recipients || !document.recipients.length) {
+        alert('Dokument nie ma żadnych odbiorców');
+        return false;
+    }
+    return true;
+}
+
 Generator.onExportDymoLabelClick = (fileName) => {
     console.log(`Should export DymoLabel for: ${fileName}`);
+    const document = processedDocuments.find((document) => document.fileName === fileName);
+    if (!document) {
+        alert('Błąd - nie udało się dopasować dokuemntu');
+        return;
+    }
+
+    /**
+     * @type {ProcessedDocument}
+     */
+    const documentWithRelevantRecipients = {
+        ...document,
+        recipients: document.recipients.filter((recipient) => recipient.isStickerRequired)
+    }
+
+    if (!Generator.validateRecipients(documentWithRelevantRecipients)) {
+        return;
+    }
+
+    const sender = Generator.getSender();
+
+    const request = {
+        sender,
+        documents: [documentWithRelevantRecipients]
+    };
+
+    ipcRenderer.send('exportDymoLabelCsv', request);
+    Generator.showLoadingModal();
+}
+
+/**
+ * Gets selected sender
+ * @returns {string}
+ */
+Generator.getSender = () => {
+    return $('#generator-sender-select').val();
 }
 
 document.addEventListener('drop', (event) => {
@@ -259,7 +307,7 @@ document.addEventListener('drop', (event) => {
         console.log('Sending event to ipc renderer - with paths');
         const processRequest = {
             paths,
-            sender: $('#generator-sender-select').val()
+            sender: Generator.getSender()
         }
         $('#generator-summary-wrapper').hide();
         ipcRenderer.send('processDocuments', processRequest);
