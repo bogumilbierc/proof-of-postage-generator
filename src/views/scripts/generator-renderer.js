@@ -294,6 +294,10 @@ Generator.getSender = () => {
     return $('#generator-sender-select').val();
 }
 
+Generator.onGeneratedFileLocationClick = (pathToFile) => {
+    ipcRenderer.send('openFileInExplorer', pathToFile);
+}
+
 document.addEventListener('drop', (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -333,7 +337,7 @@ ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
                 `
                     <div class="col">
                         <p><b>Sukces:</b> TAK</p>
-                        <p><b>Potwierdzenie:</b> ${document.confirmationLocation}</p>
+                        <p><b>Potwierdzenie:</b> <a href="#" onclick="Generator.onGeneratedFileLocationClick('${document.confirmationLocation}')">${document.confirmationLocation}</a></p>
                     </div>
             `
         } else {

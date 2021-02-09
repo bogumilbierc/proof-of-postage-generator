@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import * as log from 'electron-log';
 import * as path from 'path';
 import { DocumentType } from './models/document-type.enum';
@@ -153,3 +153,12 @@ ipcMain.on('addRecipient', (event, arg) => {
 ipcMain.on('deleteRecipient', (event, arg) => {
   event.returnValue = recipientsStore.deleteRecipient(arg);
 });
+
+
+/**
+ * Explorer utils
+ */
+
+ipcMain.on('openFileInExplorer', (event, arg) => {
+  shell.showItemInFolder(arg);
+})
