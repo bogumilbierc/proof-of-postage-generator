@@ -337,7 +337,7 @@ ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
                 `
                     <div class="col">
                         <p><b>Sukces:</b> TAK</p>
-                        <p><b>Potwierdzenie:</b> <a href="#" onclick="Generator.onGeneratedFileLocationClick('${document.confirmationLocation}')">${document.confirmationLocation}</a></p>
+                        <p><b>Potwierdzenie:</b> <a style="text-decoration: underline; color: #0d6efd; cursor: pointer" onclick="Generator.onGeneratedFileLocationClick('${document.confirmationLocation}')">${document.confirmationLocation}</a></p>
                     </div>
             `
         } else {
