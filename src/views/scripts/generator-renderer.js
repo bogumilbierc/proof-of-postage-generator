@@ -4,6 +4,8 @@
 /* global RecipientsModal */
 /* global SingleRecipientModal */
 
+const { remote } = require("electron");
+
 /** 
  * @typedef {object} ProcessedDocument 
  * @property {string} path
@@ -294,8 +296,10 @@ Generator.getSender = () => {
     return $('#generator-sender-select').val();
 }
 
-Generator.onGeneratedFileLocationClick = (pathToFile) => {
-    ipcRenderer.send('openFileInExplorer', pathToFile);
+Generator.onGeneratedFileLocationClick = (base64EncodedPathToFile) => {
+    const pathToFile = atob(base64EncodedPathToFile);
+    console.log(`Trying to ask to open: ${pathToFile}`)
+    remote.shell.showItemInFolder(pathToFile);
 }
 
 document.addEventListener('drop', (event) => {
@@ -332,12 +336,15 @@ ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
 
     processedDocuments.forEach((document) => {
         let statusText = '';
+
+        const escapedPath = btoa(document.confirmationLocation);
+
         if (document.pdfGenerated) {
             statusText =
                 `
                     <div class="col">
                         <p><b>Sukces:</b> TAK</p>
-                        <p><b>Potwierdzenie:</b> <a style="text-decoration: underline; color: #0d6efd; cursor: pointer" onclick="Generator.onGeneratedFileLocationClick('${document.confirmationLocation}')">${document.confirmationLocation}</a></p>
+                        <p><b>Potwierdzenie:</b> <a style="text-decoration: underline; color: #0d6efd; cursor: pointer" onclick="Generator.onGeneratedFileLocationClick('${escapedPath}')">${document.confirmationLocation}</a></p>
                     </div>
             `
         } else {

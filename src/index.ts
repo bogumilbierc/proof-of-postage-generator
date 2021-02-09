@@ -27,7 +27,8 @@ const createWindow = (): void => {
     width: 900,
     webPreferences: {
       nodeIntegration: true,
-      plugins: true
+      plugins: true,
+      enableRemoteModule: true
     },
     icon: path.join(__dirname, '../src/assets/icon.png')
   });
@@ -153,12 +154,3 @@ ipcMain.on('addRecipient', (event, arg) => {
 ipcMain.on('deleteRecipient', (event, arg) => {
   event.returnValue = recipientsStore.deleteRecipient(arg);
 });
-
-
-/**
- * Explorer utils
- */
-
-ipcMain.on('openFileInExplorer', (event, arg) => {
-  shell.showItemInFolder(arg);
-})
