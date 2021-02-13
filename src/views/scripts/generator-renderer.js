@@ -4,8 +4,6 @@
 /* global RecipientsModal */
 /* global SingleRecipientModal */
 
-const { remote } = require("electron");
-
 /** 
  * @typedef {object} ProcessedDocument 
  * @property {string} path
@@ -299,7 +297,7 @@ Generator.getSender = () => {
 Generator.onGeneratedFileLocationClick = (base64EncodedPathToFile) => {
     const pathToFile = atob(base64EncodedPathToFile);
     console.log(`Trying to ask to open: ${pathToFile}`)
-    remote.shell.showItemInFolder(pathToFile);
+    ipcRenderer.sendSync('openItemInFolder', pathToFile);
 }
 
 document.addEventListener('drop', (event) => {
