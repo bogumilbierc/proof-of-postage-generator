@@ -179,11 +179,11 @@
   <!-- Manually add recipients Modal -->
   <div class="modal fade" id="add-recipients-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="addRecipientLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addRecipientLabel">Dodaj odbiorców</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button class="btn btn-success" onclick="RecipientsModal.onSaveClick()">Zatwierdź i zamknij</button>
         </div>
         <div class="modal-body text-center">
           <div class="row">
@@ -201,9 +201,8 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-success" onclick="RecipientsModal.onSaveClick()">Zatwierdź</button>
-        </div>
+        <!-- <div class="modal-footer">
+        </div> -->
       </div>
     </div>
   </div>
