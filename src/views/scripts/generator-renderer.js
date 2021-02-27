@@ -38,7 +38,7 @@ function renderGenerator() {
     });
 }
 
-Generator.onProcessSingleFileClick = function () {
+Generator.onProcessSingleFileClick = () => {
     console.log('Sending event to ipc renderer - not paths');
     const processRequest = {
         sender: Generator.getSender()
@@ -47,7 +47,7 @@ Generator.onProcessSingleFileClick = function () {
     ipcRenderer.send('processDocuments', processRequest);
 }
 
-Generator.renderProcessingSummary = function () {
+Generator.renderProcessingSummary = () => {
     $('#generator-summary').show();
     $('#generator-summary').empty();
 
@@ -235,6 +235,7 @@ Generator.onGeneratorFilenameSaveClick = () => {
 
 Generator.onGenerateWithoutInputFileClick = () => {
     $('#generator-filename').val('');
+    $('#generator-filename-case-signature').val('');
     $('#generator-filename-modal').modal('show');
 }
 
@@ -302,6 +303,13 @@ Generator.onGeneratedFileLocationClick = (base64EncodedPathToFile) => {
     const pathToFile = atob(base64EncodedPathToFile);
     console.log(`Trying to ask to open: ${pathToFile}`)
     ipcRenderer.sendSync('openItemInFolder', pathToFile);
+}
+
+Generator.onCleanAllClick = () => {
+    if (confirm('Czy na pewno chcesz wyczyścić wszyskie obecnie załadowane dokumenty?')) {
+        processedDocuments = [];
+        Generator.renderProcessingSummary();
+    }
 }
 
 document.addEventListener('drop', (event) => {
