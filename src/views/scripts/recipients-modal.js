@@ -5,7 +5,13 @@
 
 
 const RecipientsModal = {
+    /**
+     * @type {Recipient[]}
+     */
     availableRecipients: [],
+    /**
+     * @type {Recipient[]}
+     */
     selectedRecipients: []
 };
 
@@ -29,12 +35,22 @@ RecipientsModal.renderAvailableAndSelected = () => {
     RecipientsModal.renderSelectedRecipients();
 }
 
-RecipientsModal.renderAvailableRecipients = () => {
+RecipientsModal.renderAvailableRecipients = (filterValue) => {
     $('#available-recipients').empty();
 
     const recipientsToRender = RecipientsModal.availableRecipients.filter((recipient) => {
         return !RecipientsModal.selectedRecipients.some((selected) => selected.name === recipient.name);
     })
+        .filter((recipient) => {
+            if (!filterValue) {
+                return true;
+            }
+            try {
+                return recipient.name.toLowerCase().includes(filterValue);
+            } catch {
+                return true;
+            }
+        })
 
     recipientsToRender.forEach((recipient) => {
         const entryHtml = `<div class="border border-primary border-2 mt-1">
@@ -78,3 +94,8 @@ RecipientsModal.onSaveClick = () => {
     Generator.renderProcessingSummary();
     RecipientsModal.hide();
 }
+
+RecipientsModal.onFilterInputChange = () => {
+    const filterValue = $('#add-recipient-modal-filter-input').val().trim();
+    RecipientsModal.renderAvailableRecipients(filterValue.toLowerCase());
+};
