@@ -33,7 +33,7 @@ export class ProofOfPostageService {
                 const confirmationPath = this.getConfirmationFilePath(document.fileName, documentType)
                 document.confirmationLocation = confirmationPath;
 
-                document.pdfGenerated = await this.generateFile(sender, document.recipients, confirmationPath, documentType);
+                document.pdfGenerated = await this.generateFile(sender, document.recipients, confirmationPath, documentType, document?.caseSignature);
             } else {
                 log.debug(`Document: ${document.fileName} does not have recipients, skipping it`);
                 document.pdfGenerated = false;
@@ -43,11 +43,11 @@ export class ProofOfPostageService {
         return processedDocuments;
     }
 
-    private async generateFile(sender: Sender, recipients: Recipient[], targetFilePath: string, documentType: DocumentType): Promise<boolean> {
+    private async generateFile(sender: Sender, recipients: Recipient[], targetFilePath: string, documentType: DocumentType, caseSignature?: string): Promise<boolean> {
         if (documentType === DocumentType.PDF) {
-            return await this.pdfGenerator.safelyGenerateFile(sender, recipients, targetFilePath);
+            return await this.pdfGenerator.safelyGenerateFile(sender, recipients, targetFilePath, caseSignature);
         }
-        return await this.xlsxGenerator.safelyGenerateFile(sender, recipients, targetFilePath);
+        return await this.xlsxGenerator.safelyGenerateFile(sender, recipients, targetFilePath, caseSignature);
     }
 
     private getConfirmationFilePath(filename: string, documentType: DocumentType): string {
