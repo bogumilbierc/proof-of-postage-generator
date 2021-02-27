@@ -11,6 +11,7 @@
  * @property {string} [message]
  * @property {boolean} success
  * @property {Recipient[]} recipients
+ * @property {string} [caseSignature]
 */
 
 /**
@@ -52,7 +53,8 @@ Generator.renderProcessingSummary = function () {
 
     processedDocuments.forEach((document) => {
 
-        $('#generator-summary').append(`<h3 class="text-center">${document.fileName}</h3>`);
+        $('#generator-summary').append(`<h3 class="text-center">Dokument: ${document.fileName}</h3>`);
+        $('#generator-summary').append(`<h4 class="text-center">Sygnatura sprawy: ${document.caseSignature || 'BRAK'}</h3>`);
         document.recipients.forEach((recipient, recipientIndex) => {
 
             const filenameWithoutSpaces = document.fileName.replace(' ', '');
@@ -217,11 +219,13 @@ Generator.onGeneratorFilenameSaveClick = () => {
         alert('Nazwa pliku jest wymagana');
         return;
     }
+    const caseSignature = $('#generator-filename-case-signature').val().trim();
     /**
      * @type {ProcessedDocument}
      */
     const manuallyCreatedDocument = {
         fileName,
+        caseSignature,
         recipients: []
     };
     processedDocuments.push(manuallyCreatedDocument);

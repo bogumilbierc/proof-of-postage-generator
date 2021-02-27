@@ -242,8 +242,17 @@
           <div class="mb-3">
             <label for="generator-filename" class="form-label">Nazwa pliku</label>
             <input type="text" onkeyup="Generator.onGeneratorModalFilenameKeyup(event)" class="form-control"
-              id="generator-filename" aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text">Nazwa pliku jest potrzebna do generacji nazwy pliku z potwierdzeniem.
+              id="generator-filename" aria-describedby="generator-filename-help">
+            <div id="generator-filename" class="form-text">Nazwa pliku jest potrzebna do generacji nazwy pliku z
+              potwierdzeniem.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="generator-filename-case-signature" class="form-label">Sygnatura sprawy</label>
+            <input type="text" onkeyup="Generator.onGeneratorModalFilenameKeyup(event)" class="form-control"
+              id="generator-filename-case-signature" aria-describedby="generator-filename-case-signature-help">
+            <div id="generator-filename-case-signature-help" class="form-text">Pole opcjonalne.
             </div>
           </div>
         </div>

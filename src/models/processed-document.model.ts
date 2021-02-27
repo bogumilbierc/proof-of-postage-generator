@@ -8,4 +8,5 @@ export interface ProcessedDocument {
     pdfGenerated?: boolean;
     confirmationLocation?: string;
     recipients?: Recipient[];
+    caseSignature?: string;
 }
