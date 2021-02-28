@@ -54,7 +54,7 @@ Generator.renderProcessingSummary = () => {
     processedDocuments.forEach((document) => {
 
         $('#generator-summary').append(`<h3 class="text-center">Dokument: ${document.fileName}</h3>`);
-        $('#generator-summary').append(`<h4 class="text-center">Sygnatura sprawy: ${document.caseSignature || 'BRAK'}</h3>`);
+        $('#generator-summary').append(`<h4 class="text-center">Sygnatura sprawy: <input oninput="Generator.onDocumentCaseSignatureInput('${document.fileName}', this.value)" value="${document.caseSignature || ''}"></h4>`);
         document.recipients.forEach((recipient, recipientIndex) => {
 
             const filenameWithoutSpaces = document.fileName.replace(' ', '');
@@ -310,6 +310,16 @@ Generator.onCleanAllClick = () => {
         processedDocuments = [];
         Generator.renderProcessingSummary();
     }
+}
+
+Generator.onDocumentCaseSignatureInput = (fileName, caseSignature) => {
+    const documentToModify = processedDocuments.find((document) => document.fileName === fileName);
+    if (!documentToModify) {
+        alert('Bląd - nie można dopasować dokumentu');
+        return;
+    }
+    console.log(`Setting case signatre: ${caseSignature} for document: ${JSON.stringify(documentToModify)}`);
+    documentToModify.caseSignature = caseSignature;
 }
 
 document.addEventListener('drop', (event) => {
