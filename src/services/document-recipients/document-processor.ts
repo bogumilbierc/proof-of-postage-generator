@@ -3,6 +3,7 @@ import * as log from 'electron-log';
 import * as path from 'path';
 import { ProcessDocumentsRequest } from '../../models/process-documents-request.model';
 import { ProcessedDocument } from '../../models/processed-document.model';
+import { CaseSignatureExtractor } from './case-signature-extractor';
 import { MultipleRecipientsExtractor } from './multiple-recipients-extractor';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -53,9 +54,11 @@ export class DocumentProcessor {
         try {
             const document = await mammoth.extractRawText({ path: documentPath });
             const recipients = this.multipleRecipientsExtractor.extractRecipients(document?.value);
+            const caseSignature = new CaseSignatureExtractor().extractCaseSignature(document?.value);
 
             return {
                 fileName,
+                caseSignature,
                 path: documentPath,
                 recipients,
                 success: recipients?.length > 0
