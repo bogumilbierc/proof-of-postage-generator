@@ -300,7 +300,7 @@ Generator.getSender = () => {
 }
 
 Generator.onGeneratedFileLocationClick = (base64EncodedPathToFile) => {
-    const pathToFile = atob(base64EncodedPathToFile);
+    const pathToFile = decodeURIComponent(atob(base64EncodedPathToFile));
     console.log(`Trying to ask to open: ${pathToFile}`)
     ipcRenderer.send('openItemInFolder', pathToFile);
 }
@@ -357,7 +357,7 @@ ipcRenderer.on('generateConfirmationsResponse', (event, processedDocuments) => {
     processedDocuments.forEach((document) => {
         let statusText = '';
 
-        const escapedPath = btoa(document.confirmationLocation);
+        const escapedPath = btoa(encodeURIComponent(document.confirmationLocation));
 
         if (document.pdfGenerated) {
             statusText =
