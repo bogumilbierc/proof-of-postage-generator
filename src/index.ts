@@ -154,6 +154,6 @@ ipcMain.on('deleteRecipient', (event, arg) => {
   event.returnValue = recipientsStore.deleteRecipient(arg);
 });
 
-ipcMain.on('openItemInFolder', (event, arg) => {
+ipcMain.on('openItemInFolder', async (event, arg) => {
   shell.showItemInFolder(arg);
 })

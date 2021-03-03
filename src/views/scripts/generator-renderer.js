@@ -302,7 +302,7 @@ Generator.getSender = () => {
 Generator.onGeneratedFileLocationClick = (base64EncodedPathToFile) => {
     const pathToFile = atob(base64EncodedPathToFile);
     console.log(`Trying to ask to open: ${pathToFile}`)
-    ipcRenderer.sendSync('openItemInFolder', pathToFile);
+    ipcRenderer.send('openItemInFolder', pathToFile);
 }
 
 Generator.onCleanAllClick = () => {
