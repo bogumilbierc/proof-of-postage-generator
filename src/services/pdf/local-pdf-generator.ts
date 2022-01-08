@@ -21,6 +21,10 @@ export class CommonElements {
   static readonly CHECKED_CHECKBOX: TableCell = {text: 'X'}
 }
 
+export class Images {
+  static readonly CIRCLE = 'data:image/png;base64,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'
+}
+
 export class LocalPdfGenerator {
 
   generatePdf(sender: Sender, recipients: Recipient[], saveLocation: string, caseSignature?: string): void {
@@ -57,20 +61,12 @@ export class LocalPdfGenerator {
       invisibleText: {
         color: 'white',
         fontSize: 10
-      },
-      alignRight: {
-        alignment: 'right'
       }
     };
 
-    const images = {
-      circle: __dirname + '/images/circle.png'
-    }
-
     const docDefinition: TDocumentDefinitions = {
       content: recipients.map((recipient: Recipient) => this.createContentEntryForSingleRecipient(sender, recipient, caseSignature)),
-      styles,
-      images
+      styles
     }
 
     return docDefinition;
@@ -115,7 +111,7 @@ export class LocalPdfGenerator {
     );
 
     const stampCircleRow: TableCell[] =
-        [{text: ' ', border: Borders.LEFT}, {image: 'circle', border: Borders.RIGHT, style: {alignment: 'right'}}]
+        [{text: ' ', border: Borders.LEFT}, {image: Images.CIRCLE, border: Borders.RIGHT, style: {alignment: 'right'}}]
 
     const weightAndPriceRow: TableCell[] = this.createRowWithTableAndColSpan(
         [{text: 'Masa .............kg........g', border: Borders.NO_BORDER}, {text: 'Opłata..........zł....gr', border: Borders.NO_BORDER}]

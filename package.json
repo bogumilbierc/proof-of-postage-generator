@@ -5,12 +5,13 @@
   "description": "Generates proof of postage for Word documents",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && electron-forge start",
-    "package": "tsc && electron-forge package",
-    "make": "tsc && electron-forge make",
+    "start": "tsc && yarn copy-files && electron-forge start",
+    "package": "tsc && yarn copy-files && electron-forge package",
+    "make": "tsc && yarn copy-files && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts ./src",
-    "test": "jest"
+    "test": "jest",
+    "copy-files": "copyfiles -u 1 src/**/*.ttf dist/"
   },
   "keywords": [],
   "author": {
@@ -38,6 +39,7 @@
     "@types/pdfmake": "^0.1.19",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
+    "copyfiles": "^2.4.1",
     "electron": "11.1.1",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "^2.20.0",
