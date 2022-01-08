@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import PdfPrinter from 'pdfmake';
 // eslint-disable-next-line import/no-unresolved
-import { TableCell, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { Content, StyleDictionary, TableCell, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { Sender } from '../sender-store';
+import { Recipient } from '../../models/recipient.model';
 
 export class Borders {
   static readonly NO_BORDER = [false, false, false, false];
@@ -21,7 +23,8 @@ export class CommonElements {
 
 export class LocalPdfGenerator {
 
-  generatePdf(): void {
+  generatePdf(sender: Sender, recipients: Recipient[], saveLocation: string, caseSignature?: string): void {
+    console.log('Starting PDF Generation')
     const fonts = {
       Roboto: {
         normal: __dirname + '/fonts/Roboto-Regular.ttf',
@@ -32,57 +35,69 @@ export class LocalPdfGenerator {
     };
     const printer = new PdfPrinter(fonts);
 
+
+    const pdfDoc = printer.createPdfKitDocument(this.createDocumentDefinition(sender, recipients, caseSignature));
+    pdfDoc.pipe(fs.createWriteStream(saveLocation));
+    pdfDoc.end();
+    console.log('Done PDF Generation')
+  }
+
+  createDocumentDefinition(sender: Sender, recipients: Recipient[], caseSignature?: string): TDocumentDefinitions {
+    const styles: StyleDictionary = {
+      tableHeader: {
+        bold: true,
+        fontSize: 12,
+        color: 'black'
+      },
+      smallText: {
+        bold: false,
+        fontSize: 8,
+        color: 'black'
+      },
+      invisibleText: {
+        color: 'white',
+        fontSize: 10
+      },
+      alignRight: {
+        alignment: 'right'
+      }
+    };
+
+    const images = {
+      circle: __dirname + '/images/circle.png'
+    }
+
+    const docDefinition: TDocumentDefinitions = {
+      content: recipients.map((recipient: Recipient) => this.createContentEntryForSingleRecipient(sender, recipient, caseSignature)),
+      styles,
+      images
+    }
+
+    return docDefinition;
+  }
+
+  private createContentEntryForSingleRecipient(sender: Sender, recipient: Recipient, caseSignature?: string): Content {
+
+    const recipientAddressLines = recipient.address.join('\n');
+    const recipientAddress = caseSignature ? recipientAddressLines + `\nSygnatura sprawy: ${caseSignature}` : recipientAddressLines;
+
     const confirmationTopSectionCells: TableCell[][] = [
       [{text: 'POTWIERDZENIE NADANIA', style: 'tableHeader', colSpan: 2, border: Borders.LEFT_RIGHT_TOP}, {}],
       [{text: 'przesyłki poleconej nr', style: 'tableHeader', colSpan: 2, border: Borders.LEFT_AND_RIGHT}, {}],
-      [{text: 'Nadawca:', style: 'tableHeader', border: Borders.LEFT}, {text: 'Testowy Tester\nZadupie 123\n00-200 Zadup', border: Borders.RIGHT}],
-      [{text: 'Adresat:', style: 'tableHeader', border: Borders.LEFT_AND_BOTTOM}, {text: 'Testowy Tester\nZadupie 123\n00-200 Zadup', border: Borders.RIGHT_AND_BOTTOM}]
+      [{text: 'Nadawca:', style: 'tableHeader', border: Borders.LEFT}, {text: sender.address.join('\n'), border: Borders.RIGHT}],
+      [{text: 'Adresat:', style: 'tableHeader', border: Borders.LEFT_AND_BOTTOM}, {text: recipientAddress, border: Borders.RIGHT_AND_BOTTOM}]
     ]
 
-
-    const docDefinition: TDocumentDefinitions = {
-      content: [
-        {
-          table: {
-            widths: [70, 200],
-            body: [
-              ...confirmationTopSectionCells,
-              ...this.mapBottomPartOfConfirmationTable(true)
-            ]
-          }
-        },
-
-      ],
-      styles: {
-        tableHeader: {
-          bold: true,
-          fontSize: 12,
-          color: 'black'
-        },
-        smallText: {
-          bold: false,
-          fontSize: 8,
-          color: 'black'
-        },
-        invisibleText: {
-          color: 'white',
-          fontSize: 10
-        },
-        alignRight: {
-          alignment: 'right'
-        }
+    return {
+      table: {
+        widths: [70, 200],
+        body: [
+          ...confirmationTopSectionCells,
+          ...this.mapBottomPartOfConfirmationTable(recipient.priorityShipment)
+        ],
       },
-      images: {
-        circle: __dirname + '/images/circle.png'
-      }
-
-    }
-
-    console.log('Starting PDF Generation')
-    const pdfDoc = printer.createPdfKitDocument(docDefinition);
-    pdfDoc.pipe(fs.createWriteStream('/home/bogumil/tables.pdf'));
-    pdfDoc.end();
-    console.log('Done PDF Generation')
+      unbreakable: true
+    };
   }
 
   private mapBottomPartOfConfirmationTable(priority?: boolean): TableCell[][] {
