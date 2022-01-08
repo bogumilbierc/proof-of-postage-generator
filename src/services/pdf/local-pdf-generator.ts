@@ -47,7 +47,7 @@ export class LocalPdfGenerator {
             widths: [70, 200],
             body: [
               ...confirmationTopSectionCells,
-              ...this.mapBottomPartOfConfirmationTable()
+              ...this.mapBottomPartOfConfirmationTable(true)
             ]
           }
         },
@@ -67,10 +67,13 @@ export class LocalPdfGenerator {
         invisibleText: {
           color: 'white',
           fontSize: 10
+        },
+        alignRight: {
+          alignment: 'right'
         }
       },
-      defaultStyle: {
-        // alignment: 'justify'
+      images: {
+        circle: __dirname + '/images/circle.png'
       }
 
     }
@@ -84,65 +87,51 @@ export class LocalPdfGenerator {
 
   private mapBottomPartOfConfirmationTable(priority?: boolean): TableCell[][] {
 
-    const priorityCheckbox = priority ? CommonElements.CHECKED_CHECKBOX : CommonElements.UNCHECKED_CHECKBOX;
+    const deliveryConfirmationCheckboxRow: TableCell[] = this.createRowWithTableAndColSpan(
+        [...this.createCheckbox('Potwierdzenie doręczenia albo zwrotu', false)]
+    );
 
-    const deliveryConfirmationCheckboxRow: TableCell[] = [{
-      table: {
-        body: [
-          [CommonElements.UNCHECKED_CHECKBOX, {text: 'Potwierdzenie doręczenia albo zwrotu', border: Borders.NO_BORDER}]
-        ]
-      },
-      colSpan: 2,
-      border: Borders.LEFT_AND_RIGHT
-    }, {}];
+    const receiveConfirmationAndPrioritaireCheckboxRow: TableCell[] = this.createRowWithTableAndColSpan(
+        [...this.createCheckbox('Potwierdzenie odbioru', false), ...this.createCheckbox('Priorytetowa', priority)]
+    );
 
-    const receiveConfirmationAndPrioritaireCheckboxRow: TableCell[] =
-        [{
-          table: {
-            body: [
-              [CommonElements.UNCHECKED_CHECKBOX, {text: 'Potwierdzenie odbioru', border: Borders.NO_BORDER}, priorityCheckbox, {text: 'Priorytetowa', border: Borders.NO_BORDER}]
-            ]
-          },
-          colSpan: 2,
-          border: Borders.LEFT_AND_RIGHT
-        }, {}];
+    const sizingRow: TableCell[] = this.createRowWithTableAndColSpan(
+        [...this.createCheckbox('A', false), ...this.createCheckbox('B', false), {text: 'Gabaryt', border: Borders.NO_BORDER}]
+    );
 
-    const sizingRow: TableCell[] =
-        [{
-          table: {
-            body: [
-              [CommonElements.UNCHECKED_CHECKBOX, {text: 'A', border: Borders.NO_BORDER}, CommonElements.UNCHECKED_CHECKBOX, {text: 'B', border: Borders.NO_BORDER}, {
-                text: 'Gabaryt',
-                border: Borders.NO_BORDER
-              }]
-            ]
-          },
-          colSpan: 2,
-          border: Borders.LEFT_AND_RIGHT
-        }, {}];
+    const stampCircleRow: TableCell[] =
+        [{text: ' ', border: Borders.LEFT}, {image: 'circle', border: Borders.RIGHT, style: {alignment: 'right'}}]
 
-    const weightAndPriceRow: TableCell[] = [
-      {
-        table: {
-          body: [
-            [{text: 'Masa .............kg........g', border: Borders.NO_BORDER}, {text: 'Opłata..........zł....gr', border: Borders.NO_BORDER}]
-          ]
-        },
-        colSpan: 2,
-        border: Borders.LEFT_AND_RIGHT
-      }, {}
-    ]
+    const weightAndPriceRow: TableCell[] = this.createRowWithTableAndColSpan(
+        [{text: 'Masa .............kg........g', border: Borders.NO_BORDER}, {text: 'Opłata..........zł....gr', border: Borders.NO_BORDER}]
+    );
 
     const confirmationBottomSectionsCells: TableCell[][] = [
       deliveryConfirmationCheckboxRow,
       [{text: 'SMS/E-MAIL .........................................................', colSpan: 2, border: Borders.LEFT_AND_RIGHT}, {}],
       receiveConfirmationAndPrioritaireCheckboxRow,
       sizingRow,
+      stampCircleRow,
       weightAndPriceRow,
       [{text: 'Na stronie https://sledzenie.poczta-polska.pl mozna sprawdzić status nadanej przesyłki rejestrowanej', colSpan: 2, border: Borders.LEFT_RIGHT_BOTTOM, style: 'smallText'}, {}]
     ]
 
     return confirmationBottomSectionsCells;
+  }
+
+  private createRowWithTableAndColSpan(innerTableBodyRow: TableCell[]): TableCell[] {
+    return [{
+      table: {
+        body: [innerTableBodyRow]
+      },
+      colSpan: 2,
+      border: Borders.LEFT_AND_RIGHT
+    }, {}];
+  }
+
+  private createCheckbox(text: string, checked: boolean): TableCell[] {
+    const checkboxElement = checked ? CommonElements.CHECKED_CHECKBOX : CommonElements.UNCHECKED_CHECKBOX;
+    return [checkboxElement, {text: text, border: Borders.NO_BORDER}]
   }
 
 }
