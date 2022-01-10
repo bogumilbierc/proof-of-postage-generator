@@ -62,7 +62,7 @@ W zakładce "Preferencje" możemy ustalić lokalizację pliku z nadawcami oraz l
 - ElectronJS
 - TypeScript
 - Axios
-- `http://p.ar2oor.pl/potwierdzenia/` (generowanie potwierdzeń)
+- pdfmake (generowanie potwierdzeń)
 
 ## Uruchomienie środowiska developerskiego
 
