@@ -46,7 +46,7 @@ describe('LocalPdfGenerator', () => {
       }
     ]
 
-    pdfGenerator.generatePdf(sender, recipients, '/home/bogumil/tables.pdf');
+    pdfGenerator.generatePdf(sender, recipients, __dirname + 'tables.pdf');
   })
 
 });
