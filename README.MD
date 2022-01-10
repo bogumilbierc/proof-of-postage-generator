@@ -89,5 +89,5 @@ yarn test
 
 ### Zbudowanie wersji "dystrybucjnej"
 ```
-yarn make
+yarn release
 ```
