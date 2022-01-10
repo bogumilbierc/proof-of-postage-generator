@@ -114,7 +114,7 @@ export class LocalPdfGenerator {
         [{text: ' ', border: Borders.LEFT}, {image: Images.CIRCLE, border: Borders.RIGHT, style: {alignment: 'right'}}]
 
     const weightAndPriceRow: TableCell[] = this.createRowWithTableAndColSpan(
-        [{text: 'Masa .............kg........g', border: Borders.NO_BORDER}, {text: 'Opłata..........zł....gr', border: Borders.NO_BORDER}]
+        [{text: 'Masa.............kg........g', border: Borders.NO_BORDER}, {text: 'Opłata.............zł........gr', border: Borders.NO_BORDER}]
     );
 
     const confirmationBottomSectionsCells: TableCell[][] = [
