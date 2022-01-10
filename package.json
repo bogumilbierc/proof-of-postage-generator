@@ -1,16 +1,17 @@
 {
   "name": "proof-of-postage-generator",
   "productName": "proof-of-postage-generator",
-  "version": "1.0.9",
+  "version": "2.0.0",
   "description": "Generates proof of postage for Word documents",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && electron-forge start",
-    "package": "tsc && electron-forge package",
-    "make": "tsc && electron-forge make",
+    "start": "tsc && yarn copy-files && electron-forge start",
+    "package": "tsc && yarn copy-files && electron-forge package",
+    "make": "tsc && yarn copy-files && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts ./src",
-    "test": "jest"
+    "test": "jest",
+    "copy-files": "copyfiles -u 1 src/**/*.ttf dist/"
   },
   "keywords": [],
   "author": {
@@ -35,8 +36,10 @@
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "@types/pdfmake": "^0.1.19",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
+    "copyfiles": "^2.4.1",
     "electron": "11.1.1",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "^2.20.0",
@@ -49,6 +52,7 @@
     "electron-log": "^4.3.1",
     "electron-squirrel-startup": "^1.0.0",
     "exceljs": "^4.2.0",
-    "mammoth": "^1.4.14"
+    "mammoth": "^1.4.14",
+    "pdfmake": "^0.2.4"
   }
 }
