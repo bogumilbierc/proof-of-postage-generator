@@ -89,21 +89,21 @@ export class LocalPdfGenerator {
         widths: [70, 200],
         body: [
           ...confirmationTopSectionCells,
-          ...this.mapBottomPartOfConfirmationTable(recipient.priorityShipment)
+          ...this.mapBottomPartOfConfirmationTable(recipient.priorityShipment, recipient.retrievalConfirmation)
         ],
       },
       unbreakable: true
     };
   }
 
-  private mapBottomPartOfConfirmationTable(priority?: boolean): TableCell[][] {
+  private mapBottomPartOfConfirmationTable(priority?: boolean, retrievalConfirmation?: boolean): TableCell[][] {
 
     const deliveryConfirmationCheckboxRow: TableCell[] = this.createRowWithTableAndColSpan(
         [...this.createCheckbox('Potwierdzenie doręczenia albo zwrotu', false)]
     );
 
     const receiveConfirmationAndPrioritaireCheckboxRow: TableCell[] = this.createRowWithTableAndColSpan(
-        [...this.createCheckbox('Potwierdzenie odbioru', false), ...this.createCheckbox('Priorytetowa', priority)]
+        [...this.createCheckbox('Potwierdzenie odbioru', retrievalConfirmation), ...this.createCheckbox('Priorytetowa', priority)]
     );
 
     const sizingRow: TableCell[] = this.createRowWithTableAndColSpan(
